@@ -7,9 +7,6 @@
 	<link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}"
 	{% block head %}
 		<ul>
-		<li>
-			JPL UCR Image Classifier
-		</li>
 		{% for item in nav.top %}
 			<li class="{{ 'active' if item.is_active else '' }}">
 				<a href="{{ item.url }}">{{ item.label }}</a>
