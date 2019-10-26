@@ -6,7 +6,7 @@ nav = Navigation(app)
 nav.Bar('top',[
     nav.Item('Home', 'index'),
     nav.Item('View Dataset', 'viewData' , {'id':1},
-             ])
+])
 
 @app.route('/')
 def index():
