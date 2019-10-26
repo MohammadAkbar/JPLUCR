@@ -9,7 +9,7 @@
 	{% endblock %}
 </head>
 <body>
-	<ul>
+	<ul class = 'navbar'>
 		{% for item in nav.top %}
 		<li class="{{ 'active' if item.is_active else '' }}">
 			<a href="{{ item.url }}">{{ item.label }}</a>
