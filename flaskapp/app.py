@@ -1,4 +1,5 @@
-from flask import Flask, render_template, url_for, Navigation
+from flask import Flask, render_template, url_for
+from flask.ext.navigation import Navigation
 
 app = Flask(__name__)
 nav = Navigation(app)
