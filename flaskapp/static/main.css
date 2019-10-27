@@ -10,6 +10,7 @@ body {
 .navbar {
   float: right;
   margin-top: 8px;
+  font-size: 40px;
 }
 .navbar li {
   display: inline;
