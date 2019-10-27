@@ -12,13 +12,3 @@ body {
   margin-top: 8px;
   font-size: 40px;
 }
-.navbar li {
-  display: inline;
-}
-.navbar li + li {
-  margin-left: 35px;
-}
-.navbar li a {
-  color: #444;
-  text-decoration: none;
-}
