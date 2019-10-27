@@ -4,14 +4,16 @@
 <body>
 
 {% block navbar %}
-JPL UCR Project
-<ul class="nav nav-pills nav-stacked">
-    {% for item in nav.top %}
-    <li role="presentation class="{{ 'active' if item.is_active else '' }}">
-        <a href="{{ item.url }}">{{item.label}}</a>
-    </li>
-    {% endfor %}
-</ul>
+div class="btn-group-vertical" role="group">
+    JPL UCR Project
+    <ul class="nav nav-pills nav-stacked">
+        {% for item in nav.top %}
+        <li role="presentation class="{{ 'active' if item.is_active else '' }}">
+            <a href="{{ item.url }}">{{item.label}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
     
 {% block content %}{% endblock %}
