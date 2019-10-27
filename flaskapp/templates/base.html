@@ -10,27 +10,14 @@ Microblog:
         <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('show_books') }}">Books</a>
+        <a class="nav-link" href="{{ url_for('index') }}">Books</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        <a class="nav-link" href="{{ url_for('index') }}">Login</a>
     </li>
 </ul>
 {% endblock %}
-
-    <hr>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-           </ul>
-       {% endif %}
-    {% endwith %}
+    Content
     {% block content %}{% endblock %}
 </body>
 {% endblock %}
