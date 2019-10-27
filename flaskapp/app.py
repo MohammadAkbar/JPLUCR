@@ -8,7 +8,7 @@ bootstrap = Bootstrap(app)
 
 nav = Navigation(app)
 nav.Bar('top',[
-    nav.Item('Home', 'index'),
+    nav.Item('Homepage', 'index'),
     nav.Item('Data Visualization', 'dataVisual'),
     nav.Item('Classify Data', 'dataClassify')
 ])
@@ -18,11 +18,11 @@ def index():
     return render_template('index.html' , title='Homepage')
 
 @app.route('/dataVisual')
-def viewData():
+def dataVisual():
     return render_template('dataVisual.html' , title='Data Visualization')
     
 @app.route('/dataClassify')
-def classifyData():
+def dataClassify():
     return render_template('dataClassify.html', title='Data Classify')
 
 if __name__ == '__main__':
