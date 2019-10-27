@@ -1,13 +1,36 @@
 {% extends 'bootstrap/base.html' %}
 
-{% block title %}
-	{{ title }} - JPL UCR Project
-{% endblock %}
+{% block body %}
+<body>
 
 {% block navbar %}
-	Test
+Microblog: 
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('show_books') }}">Books</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    </li>
+</ul>
 {% endblock %}
 
-{% block content %}
-	Testing
+    <hr>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+           </ul>
+       {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</body>
 {% endblock %}
