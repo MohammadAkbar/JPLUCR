@@ -6,13 +6,18 @@
 {% block navbar %}
 JPL UCR Project
 <ul class="nav nav-pills nav-stacked">
-    <li class="nav-item">
+    {% for item in nav.top %}
+    <li role="presentation class="{{ 'active' if item.is_active else '' }}">
+        <a class="nav-link active" href="{{ item.url }}">item.label</a>
+    </li
+    {% endfor %}
+    <li role="presentation" class="nav-item">
         <a class="nav-link active" href="{{ url_for('index') }}">Homepage</a>
     </li>
-    <li class="nav-item">
+    <li role="presentation" class="nav-item">
         <a class="nav-link" href="{{ url_for('viewData') }}">Data Visualization</a>
     </li>
-    <li class="nav-item">
+    <li role="presentation" class="nav-item">
         <a class="nav-link" href="{{ url_for('classifyData') }}">Data Classification</a>
     </li>
 </ul>
