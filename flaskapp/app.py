@@ -19,7 +19,7 @@ def index():
 
 @app.route('/viewData')
 def viewData(id):
-    return render_template('viewData.html' , title='Data Visualization)
+    return render_template('viewData.html' , title='Data Visualization')
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=80,debug=True)
