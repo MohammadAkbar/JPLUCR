@@ -8,7 +8,7 @@ JPL UCR Project
 <ul class="nav nav-pills nav-stacked">
     {% for item in nav.top %}
     <li role="presentation class="{{ 'active' if item.is_active else '' }}">
-        <a class="nav-link active" href="{{ item.url }}">{{item.label}}</a>
+        <a href="{{ item.url }}">{{item.label}}</a>
     </li>
     {% endfor %}
 </ul>
