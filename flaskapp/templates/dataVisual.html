@@ -22,8 +22,8 @@
 		var lyr = L.tilelayer('/tifs/paulitiles/./{z}/{x}/{y}.png', {tms: true, opacity: 0.7, attribution: ""});
 		
 		var map = L.map('mapid', {
-			center: [30.1982589383, -94.7330134442]
-			zoom: 4
+			center: [30.1982589383, -94.7330134442],
+			zoom: 4,
 			minZoom: 2,
 			maxZoom: 4,
 			layers: [osm]
