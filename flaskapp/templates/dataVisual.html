@@ -19,7 +19,7 @@
 			id: 'mapbox.streets'
 		});
 
-		var lyr = L.tileLayer('/tifs/paulitiles/./{z}/{x}/{y}.png', {tms: true, opacity: 0.7, attribution: ""});
+		var lyr = L.tileLayer('/home/afshancloud/flaskapp/tifs/paulitiles/./{z}/{x}/{y}.png', {tms: true, opacity: 0.7, attribution: ""});
 		
 		var map = L.map('mapid', {
 			center: [30.1982589383, -94.7330134442],
@@ -27,7 +27,7 @@
 			minZoom: 2,
 			maxZoom: 4,
 			layers: [osm]
-		});i
+		});
 
 		var basemaps = {"OpenStreetmap": osm};
 		var overlaymaps = {"Layer": lyr};
