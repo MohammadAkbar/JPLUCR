@@ -1,27 +1,37 @@
 {% extends 'bootstrap/base.html' %}
 
+{% block head %}
+	{{ super() }}
+	<link rel="styleshet" href="{{ url_for('static', filename='main.css') }}"/>
+	<link rel="stylesheet" href="{{url_for('static', filename='leaflet/leaflet.css')}}"/>
+	<script src="{{ url_for('static' , filename='leaflet/leaflet.js')}}"></script>
+{% endblock %}
+
 {% block body %}
 <body>
 
 {% block navbar %}
-<div class="row">
-    <div class="container">
-    <div class="col-md-4">
-        <div class="btn-group-vertical" role="group">
-            <ul class="nav nav-pills nav-stacked">
-                {% for item in nav.top %}
-                <li role="presentation class="{{ 'active' if item.is_active else '' }}">
-                    <a href="{{ item.url }}">{{item.label}}</a>
-                </li>
-                {% endfor %}
-            </ul>
+<nav class="navbar navbar-default">
+        <h1 style = "margin-left: 30px;">JPL UCR Project</h1>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="btn-group-vertical" role="group">
+                <ul class="nav nav-pills nav-stacked">
+                    {% for item in nav.top %}
+                    <li role="presentation class="{{ 'active' if item.is_active else '' }}">
+                        <a href="{{ item.url }}">{{item.label}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-8">
+             
+            {% block content %}{% endblock %}
         </div>
     </div>
-    </div>
-    <div class="col-md-8">
-         {% block content %}{% endblock %}
-    </div>
-                         
 </div>
 {% endblock %}
 </body>
