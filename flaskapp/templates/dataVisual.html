@@ -78,8 +78,10 @@
         var map = L.map('mapid', {
             center: [30.1982589383, -94.7330134442],
             zoom: 8,
-            minZoom: 1,
-            maxZoom: 18,
+            minNativeZoom: 1,
+            maxNativeZoom: 18,
+            minZoom: 0,
+            maxZoom: 30,
             layers: [osm]
         });
 
