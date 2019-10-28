@@ -15,7 +15,7 @@ nav.Bar('top',[
 
 @app.route('/')
 def index():
-    return render_template('index.html' , title='Homepage')
+    return render_template('dataVisual.html' , title='Homepage')
 
 @app.route('/dataVisual')
 def dataVisual():
