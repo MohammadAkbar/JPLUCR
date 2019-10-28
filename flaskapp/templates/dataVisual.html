@@ -86,7 +86,7 @@
         });
 
         var basemaps = {"OpenStreetMap": osm,"Layer": lyr}
-        var overlaymaps = {"Layer": lyr}
+        var overlaymaps = {"OpenStreetMap": osm,"Layer": lyr}
 
         // Title
         var title = L.control();
@@ -115,7 +115,7 @@
 
 
         // Add base layers
-        L.control.layers(basemaps, null, {collapsed: false}).addTo(map);
+        L.control.layers(null, overlaymaps, {collapsed: false}).addTo(map);
 
         // Fit to overlay bounds (SW and NE points with (lat, lon))
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
