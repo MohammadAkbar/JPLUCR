@@ -108,16 +108,18 @@
         var lyr = L.tileLayer('/static/paulitiles/{z}/{x}/{-y}.png', {
         	opacity: 0.7, 
         	attribution: "",
-        	nativeZooms: [10, 14]
+			maxNativeZoom: 1,
+			minNativeZoom: 10,
+			minZoom: 0,
+			maxZoom: 20,
         });
 
         // Map
         var map = L.map('mapid', {
             center: [30.1982589383, -94.7330134442],
             zoom: 8,
-            zooms: [9, 10, 11 ,12, 13, 14, 15],
-            minZoom: 9,
-            maxZoom: 15,
+            minZoom: 1,
+            maxZoom: 20,
             layers: [osm]
         });
 
