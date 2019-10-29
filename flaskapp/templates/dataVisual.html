@@ -68,6 +68,17 @@
 
         // Fit to overlay bounds (SW and NE points with (lat, lon))
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+        	popup
+        		.setLatLng(e.latlng)
+        		.setContent("You clicked the map at " + e.latlng.toString())
+        		.openOn(map);
+        }
+
+        mymap.on('click', onMapClick);
 	</script>
 
 {% endblock %}
