@@ -16,16 +16,13 @@
         });
 
         // Overlay layers (TMS)
-        var southWest = L.latLng(29.4898508766, -94.1802658885),
-		northEast = L.latLng(30.906667, -95.285761),
-		bounds = L.latLngBounds(southWest, northEast);
         var lyr = L.tileLayer('/static/paulitiles/{z}/{x}/{-y}.png', {
         	opacity: 0.7, 
         	attribution: "",
-			minNativeZoom: 1,
+			minNativeZoom: 0,
 			maxNativeZoom: 16,
-			bounds:bounds,
-			reuseTiles : true,
+			minZoom: 0,
+			maxZoom: 20,
         });
 
         // Map
@@ -34,12 +31,11 @@
             zoom: 12,
             minZoom: 1,
             maxZoom: 20,
-            layers: [osm]
+            layers: [osm,lyr]
         });
-		map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
-		lyr.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
-        var basemaps = {"OpenStreetMap": osm};
-        var overlaymaps = {"Layer": lyr};
+
+        var basemaps = {"OpenStreetMap": osm,"Layer": lyr};
+        var overlaymaps = {"OpenStreetMap": osm,"Layer": lyr};
 
         // Title
         var title = L.control();
@@ -68,10 +64,10 @@
 
 
         // Add base layers
-        L.control.layers(basemaps, overlaymaps, {collapsed: false}).addTo(map);
+        L.control.layers(null, overlaymaps, {collapsed: false}).addTo(map);
 
         // Fit to overlay bounds (SW and NE points with (lat, lon))
-        
+        map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
 	</script>
 
 {% endblock %}
