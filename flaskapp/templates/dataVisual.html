@@ -75,10 +75,10 @@
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
 
 
-        //// Initialise the FeatureGroup to store editable layers
+        // Initialise the FeatureGroup to store editable layers
         var editableLayers = new L.FeatureGroup();
         map.addLayer(editableLayers);
-        
+
         // set options for polygon drawing utility
         var drawPluginOptions = {
             position: 'topright',
@@ -104,6 +104,10 @@
                 remove: false
             }
         };
+
+        // Initialise the draw control and pass it the FeatureGroup of editable layers
+        var drawControl = new L.Control.Draw(drawPluginOptions);
+        map.addControl(drawControl);
 	</script>
 
 {% endblock %}
