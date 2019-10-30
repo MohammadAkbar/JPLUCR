@@ -74,6 +74,11 @@
         // Fit to overlay bounds (SW and NE points with (lat, lon))
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
 
+
+        //// Initialise the FeatureGroup to store editable layers
+        var editableLayers = new L.FeatureGroup();
+        map.addLayer(editableLayers);
+        
         // set options for polygon drawing utility
         var drawPluginOptions = {
             position: 'topright',
