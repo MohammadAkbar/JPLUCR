@@ -72,6 +72,12 @@
 
         // Fit to overlay bounds (SW and NE points with (lat, lon))
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
+
+        // dynamic map width
+		$(window).on("resize", function() {
+			$("#mapid").height($(window).height()).width($(window).width());
+			map.invalidateSize();
+		}).trigger("resize");
 	</script>
 
 {% endblock %}
