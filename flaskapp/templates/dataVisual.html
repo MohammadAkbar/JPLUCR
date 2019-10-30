@@ -20,7 +20,7 @@
         var northEast = L.latLng(30.906667, -95.285761);
         var mybounds = L.latLngBounds(southWest, northEast);
 
-        // load custom tile layer
+        // load custom tile layer with custom nasa data
         var lyr = L.tileLayer('/static/paulitiles/{z}/{x}/{-y}.png', {
         	bounds:mybounds,
         	opacity: 0.7, 
@@ -31,7 +31,7 @@
 			maxZoom: 20,
         });
 
-        // Create Map
+        // Create Map data with open street view data
         var map = L.map('mapid', {
             center: [30.1982589383, -94.7330134442],
             zoom: 12,
@@ -75,18 +75,12 @@
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
 
 
-        // Initialise the FeatureGroup to store editable layers
+        // Add contol layer to 
         var drawnItems = new L.FeatureGroup().addTo(map);
         map.addLayer(drawnItems);
         L.control.layers(
             {
-                'osm': osm.addTo(map),
-                "google": L.tileLayer(
-                    'http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', 
-                    {
-                        attribution: 'google'
-                    }
-                )
+                {"OpenStreetMap": osm,"Layer": lyr}
             },
             { 
                 'drawlayer': drawnItems 
@@ -96,8 +90,21 @@
                 , collapsed: false 
             }
         ).addTo(map);
-        map.addControl(drawControl);
 
+        map.addControl(new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems,
+            poly: {
+                allowIntersection: false
+            }
+        },
+        draw: {
+            polygon: {
+                allowIntersection: false,
+                showArea: true
+            }
+        }
+    }));
         
 	</script>
 
