@@ -69,6 +69,10 @@
         // Fit to overlay bounds (SW and NE points with (lat, lon))
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
 
+
+        var editableLayers = new L.FeatureGroup();
+		map.addLayer(editableLayers);
+
         // set options for drawing tool
 		var drawPluginOptions = {
 			position: 'topright',
@@ -99,8 +103,6 @@
 		map.addControl(drawControl);
 		
         // Initialise the FeatureGroup to store editable layers
-		var editableLayers = new L.FeatureGroup();
-		map.addLayer(editableLayers);
 
 		map.on('draw:created', function(e) 
 			{
