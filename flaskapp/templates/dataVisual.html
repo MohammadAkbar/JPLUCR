@@ -108,6 +108,15 @@
         // Initialise the draw control and pass it the FeatureGroup of editable layers
         var drawControl = new L.Control.Draw(drawPluginOptions);
         map.addControl(drawControl);
+
+        map.on('draw:created', function(e) {
+            var type = e.layerType,
+            layer = e.layer;
+
+            if (type === 'marker') {
+                layer.bindPopup('A popup!');
+            }
+        });
 	</script>
 
 {% endblock %}
