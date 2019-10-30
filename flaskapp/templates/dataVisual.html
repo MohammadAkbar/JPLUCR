@@ -76,13 +76,26 @@
 
 
         // Initialise the FeatureGroup to store editable layers
-        var drawnItems = new L.FeatureGroup();
+        var drawnItems = new L.FeatureGroup().addTo(map);
         map.addLayer(drawnItems);
-        var drawControl = new L.Control.Draw({
-            edit: {
-                featureGroup: drawnItems
+        L.control.layers(
+            {
+                'osm': osm.addTo(map),
+                "google": L.tileLayer(
+                    'http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', 
+                    {
+                        attribution: 'google'
+                    }
+                )
+            },
+            { 
+                'drawlayer': drawnItems 
+            },
+            { 
+                position: 'topleft'
+                , collapsed: false 
             }
-        });
+        ).addTo(map);
         map.addControl(drawControl);
 
         
