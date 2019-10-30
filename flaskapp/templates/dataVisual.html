@@ -16,12 +16,15 @@
         });
 
         // Overlay layers (TMS)
+        var southWest = L.latLng(29.4898508766, -94.1802658885),
+		northEast = L.latLng(30.906667, -95.285761),
+		bounds = L.latLngBounds(southWest, northEast);
         var lyr = L.tileLayer('/static/paulitiles/{z}/{x}/{-y}.png', {
         	opacity: 0.7, 
         	attribution: "",
 			minNativeZoom: 1,
 			maxNativeZoom: 16,
-			bounds:[[29.4898508766, -94.1802658885], [30.906667, -95.285761]],
+			bounds:bounds,
 			reuseTiles : true,
         });
 
