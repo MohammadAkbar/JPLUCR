@@ -32,7 +32,8 @@
             maxZoom: 20,
             layers: [osm]
         });
-
+		map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
+		lyr.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
         var basemaps = {"OpenStreetMap": osm};
         var overlaymaps = {"Layer": lyr};
 
@@ -66,7 +67,7 @@
         L.control.layers(basemaps, overlaymaps, {collapsed: false}).addTo(map);
 
         // Fit to overlay bounds (SW and NE points with (lat, lon))
-        map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
+        
 	</script>
 
 {% endblock %}
