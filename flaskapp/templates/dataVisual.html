@@ -9,6 +9,7 @@
 	<div id="mapid" style="width:100%;height:400px;margin-bottom:40px;"></div>
 	<script>
         // create a satellite layer
+        var layergroup_mapbox = L.layerGroup();
         var mapbox_layer = L.tileLayer(
             'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFrYmEwMDIiLCJhIjoiY2syOW40b3NqMHdhazNsbXNybHA2dnAzdSJ9.ihFn0ArkcGyiig4pK58uOQ', 
             {
@@ -17,13 +18,15 @@
         	   maxZoom:20,
             }
         );
+        mapbox_layer.addTo(layergroup_mapbox);
 
-        // set south-west and north-east bounds
+        // set south-west and north-east bounds for nasa image
 		var southWest = L.latLng(29.4898508766, -94.1802658885);
         var northEast = L.latLng(30.906667, -95.285761);
         var mybounds = L.latLngBounds(southWest, northEast);
 
         // load custom tile layer with custom nasa data
+        var layergroup_nasa = L.layerGroup();
         var nasa_layer = L.tileLayer('/static/paulitiles/{z}/{x}/{-y}.png', {
         	bounds:mybounds,
         	opacity: 0.7, 
@@ -33,6 +36,7 @@
 			minZoom: 0,
 			maxZoom: 20,
         });
+        nasa_layer.addTo(layergroup_nasa);
 
         // Create Map data with open street view data
         var map = L.map('mapid', {
@@ -43,14 +47,13 @@
             layers: [mapbox_layer,nasa_layer]
         });
 
-        var overlaymaps = {
+        var overlays = {
             "OpenStreetMap": mapbox_layer,
-            "Layer": nasa_layer,
-            'drawlayer': drawnItems 
+            "Layer": nasa_layer
         };
 
         // Add base layers
-        L.control.layers(null, overlaymaps, {collapsed: false}).addTo(map);
+        L.control.layers(null, overlays, {collapsed: false}).addTo(map);
 
         // Fit to overlay bounds (SW and NE points with (lat, lon))
         map.fitBounds([[29.4898508766, -94.1802658885], [30.906667, -95.285761]]);
