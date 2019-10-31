@@ -6,11 +6,12 @@
 	<link rel="styleshet" href="{{ url_for('static', filename='main.css') }}"/>
 	<link rel="stylesheet" href="{{url_for('static', filename='leaflet/leaflet.css')}}"/>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static' , filename='src/leaflet.draw.css') }}"/>
+
     <script src="{{ url_for('static' , filename='leaflet/leaflet.js') }}"></script>
 
     <script src="{{ url_for( 'static' , filename='leaflet/src/Leaflet.draw.js' ) }} "></script>
     <script src="{{ url_for( 'static' , filename='leaflet/src/Leaflet.Draw.Event.js' ) }} "></script>
-    <link rel="stylesheet" href="../../src/leaflet.draw.css"/>
 
     <script src="{{ url_for( 'static' , filename='leaflet/src/Toolbar.js' ) }} "></script>
     <script src="{{ url_for( 'static' , filename='leaflet/src/Tooltip.js' ) }} "></script>
