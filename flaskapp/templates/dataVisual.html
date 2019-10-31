@@ -45,12 +45,34 @@
 
         var overlaymaps = {
             "OpenStreet": gmaps,
-            "UAVSAR": uavsar
+            "UAVSAR": uavsar,
+            'drawlayer': drawnItems
         };
+
+        var drawnItems = L.featureGroup().addTo(map);
 
         // Add base layers
         L.control.layers(null, overlaymaps, {collapsed: false}).addTo(map);
-        
+        map.addControl(new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems,
+                poly: {
+                    allowIntersection: false
+                }
+            },
+            draw: {
+                polygon: {
+                    allowIntersection: false,
+                    showArea: true
+                }
+            }
+        }));
+
+        map.on(L.Draw.Event.CREATED, function (event) {
+            var layer = event.layer;
+
+            drawnItems.addLayer(layer);
+        });
 	</script>
 
 {% endblock %}
