@@ -7,6 +7,45 @@
 	<link rel="stylesheet" href="{{url_for('static', filename='leaflet/leaflet.css')}}"/>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="{{ url_for('static' , filename='leaflet/leaflet.js') }}"></script>
+
+    <script src="{{ url_for( 'static' , filename='leaflet/src/Leaflet.draw.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/Leaflet.Draw.Event.js' ) }} "></script>
+    <link rel="stylesheet" href="../../src/leaflet.draw.css"/>
+
+    <script src="{{ url_for( 'static' , filename='leaflet/src/Toolbar.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/Tooltip.js' ) }} "></script>
+
+    <script src="{{ url_for( 'static' , filename='leaflet/src/ext/GeometryUtil.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/ext/LatLngUtil.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/ext/LineUtil.Intersect.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/ext/Polygon.Intersect.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/ext/Polyline.Intersect.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/ext/TouchEvents.js' ) }} "></script>
+
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/DrawToolbar.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.Feature.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.SimpleShape.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.Polyline.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.Marker.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.Circle.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.CircleMarker.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.Polygon.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/draw/handler/Draw.Rectangle.js' ) }} "></script>
+
+
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/EditToolbar.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/EditToolbar.Edit.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/EditToolbar.Delete.js' ) }} "></script>
+
+    <script src="{{ url_for( 'static' , filename='leaflet/src/Control.Draw.js' ) }} "></script>
+
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.Poly.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.SimpleShape.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.Rectangle.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.Marker.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.CircleMarker.js' ) }} "></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.Circle.js' ) }} "></script>
+
 {% endblock %}
 
 {% block body %}
