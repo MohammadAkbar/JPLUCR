@@ -3,14 +3,17 @@
 {% block head %}
 	{{ super() }}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
-	<link rel="styleshet" href="{{ url_for('static', filename='main.css') }}"/>
 	<link rel="stylesheet" href="{{url_for('static', filename='leaflet/leaflet.css')}}"/>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static' , filename='leaflet/src/leaflet.draw.css') }}"/>
+    <link rel="styleshet" href="{{ url_for('static', filename='main.css') }}"/>
 
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script src="{{ url_for('static' , filename='leaflet/leaflet.js') }}"></script>
 
     <script src="{{ url_for( 'static' , filename='leaflet/src/Leaflet.draw.js' ) }} "></script>
+
+
     <script src="{{ url_for( 'static' , filename='leaflet/src/Leaflet.Draw.Event.js' ) }} "></script>
 
     <script src="{{ url_for( 'static' , filename='leaflet/src/Toolbar.js' ) }} "></script>
@@ -46,6 +49,9 @@
     <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.Marker.js' ) }} "></script>
     <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.CircleMarker.js' ) }} "></script>
     <script src="{{ url_for( 'static' , filename='leaflet/src/edit/handler/Edit.Circle.js' ) }} "></script>
+
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 
 {% endblock %}
 

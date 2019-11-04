@@ -6,6 +6,7 @@
     <div>
         <h1 style="text-align: center">{{title}}</h1>
     </div>
+    <a href="#" id="export" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style="margin-top: 20px;margin-bottom: 20px;">Download</a>
 	<div id="mapid" style="width:100%;height:400px;margin-bottom:40px;"></div>
 	<script>
         // create a satellite layer
@@ -40,8 +41,18 @@
             zoom: 12,
             minZoom: 1,
             maxZoom: 20,
-            layers: [gmaps,uavsar]
+            layers: [gmaps,uavsar],
+	    zoomControl:false
         });
+	map.toggleFullscreen();
+        var drawnItems = L.featureGroup().addTo(map);
+        var classificationPicked = false;
+        var last_layer;
+        var classifications = [
+            {id_list:1, name:'Flooded',token:'flooded',color:'#afdeed'},
+            {id_list:2, name:'Arid',token:'arid',color:'#e5ebb2'},
+            {id_list:2, name:'Urban',token:'urban',color:'#79ed98'}
+        ]
 
         var overlaymaps = {
             "OpenStreet": gmaps,
@@ -49,30 +60,114 @@
             'drawlayer': drawnItems
         };
 
-        var drawnItems = L.featureGroup().addTo(map);
-
+        var shapes = [];
         // Add base layers
         L.control.layers(null, overlaymaps, {collapsed: false}).addTo(map);
+        L.control.fullscreen().addTo(map);
         map.addControl(new L.Control.Draw({
-            edit: {
+            /*edit: {
                 featureGroup: drawnItems,
                 poly: {
                     allowIntersection: false
-                }
-            },
+                },
+                remove: false,
+                delete: false
+            },*/
             draw: {
                 polygon: {
                     allowIntersection: false,
-                    showArea: true
-                }
+                    shapeOptions: {
+                        stroke: true,
+                        color: '#ffffff',
+                        fillColor: '#ffffff',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.4
+                    }
+                },
+                polyline: false,
+                circle: false,
+                circlemarker: false,
+                rectangle: false,
+                marker:false
             }
         }));
 
         map.on(L.Draw.Event.CREATED, function (event) {
             var layer = event.layer;
+            last_layer = layer;
 
-            drawnItems.addLayer(layer);
+            drawnItems.addLayer(event.layer);
+
+
+            var options = classifications.map(x=>x.token);
+            console.log(options);
+            var coordinates = layer.getLatLngs()[0];
+            var last = coordinates[0];
+
+            promptClassify( layer , options , last );
+
+            
         });
+        
+        function promptClassify( layer , options , latlng , shape){
+            classificationPicked=false;
+            var content = document.createElement("div");
+            for( i=0 ; i<options.length; i++){
+                content.innerHTML+="<button id=\"prompt_"+options[i]+"\" type=\"button\" class=\"btn btn-success\" value=\""+options[i]+"\">"+options[i]+"</button>";
+            }
+
+            var popup = L.popup({closeButton:false})
+                .setLatLng(latlng)
+                .setContent(content)
+                .openOn(map);
+
+
+            for(i=0 ; i<options.length; i++){
+                $("#prompt_"+options[i]).click(
+                    function(event) {
+                        var shape = layer.toGeoJSON();
+                        shape.label=$(this).prop('value');
+                        saveShape(shape);
+                    }               
+                );
+            }
+            
+        }
+
+        function saveShape(shape){
+            shapes.push(shape);
+            classificationPicked=true;
+            console.log(String(shape.label));
+            var i = classifications.map(e => e.token).indexOf(String(shape.label));
+            console.log(i);
+            last_layer.setStyle({
+                color: classifications[i].color,
+                fillColor: classifications[i].color
+            });
+            map.closePopup();
+        }
+        map.on('popupclose', function(e) {
+            if(classificationPicked==false){
+                drawnItems.removeLayer(last_layer);
+                shapes.pop();
+            } else{
+                //drawnItems.removeLayer(last_layer);
+                //last_layer.setStyle({color:'red'});
+            }
+        });
+        
+        document.getElementById('export').onclick = function(e) {
+            console.log("clicked");
+            if(shapes.length>0){
+                console.log("test");
+                var data = drawnItems.toGeoJSON();
+                var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+                document.getElementById('export').setAttribute('href', 'data:' + convertedData);
+                document.getElementById('export').setAttribute('download','data.geojson');
+            }
+        }
+
 	</script>
 
 {% endblock %}
