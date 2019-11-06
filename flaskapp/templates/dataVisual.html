@@ -56,6 +56,17 @@
                 northeast: L.latLng(-95.6295661,  30.0543760),
             }
         ];
+
+
+        // Create Map data with open street view data
+        var map = L.map('mapid', {
+            center: [-96.1895275,  29.3270400],
+            zoom: 12,
+            minZoom: 1,
+            maxZoom: 20,
+            layers: [gmaps,uavsars]
+        });
+
         var uavsars = L.featureGroup().addTo(map);
         var uavsar2 = L.tileLayer('/static/alltiles/'+alltiles[0].fullname+'/{z}/{x}/{-y}.png',{
             bounds: L.latLngBounds(alltiles[0].southwest,alltiles[0].northeast),
@@ -67,16 +78,7 @@
             maxZoom: 20,
         });
         uavsars.addLayer(uavsar2);
-
-        // Create Map data with open street view data
-        var map = L.map('mapid', {
-            center: [-96.1895275,  29.3270400],
-            zoom: 12,
-            minZoom: 1,
-            maxZoom: 20,
-            layers: [gmaps,uavsars]
-        });
-
+        
         // setup draw layer
         var drawnItems = L.featureGroup().addTo(map);
         var classificationPicked = false;
