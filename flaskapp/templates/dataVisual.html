@@ -54,10 +54,16 @@
                 fullname:'colora_32913_17090_008_170903_L090_CX_01_pauli',
                 southwest: L.latLng(28.5997041, -96.7494890),
                 northeast: L.latLng(30.0543760, -95.6295661),
+            },
+            {
+                id:1, 
+                name:'colora',
+                fullname:'colora_32913_17090_008_170903_L090_CX_01_pauli',
+                southwest: L.latLng(28.5997041, -96.7494890),
+                northeast: L.latLng(30.0543760, -95.6295661),
             }
         ];
 
-        var uavsars = L.featureGroup();
         // Create Map data with open street view data
         var map = L.map('mapid', {
             center: [28.5997041, -96.7494890],
@@ -67,16 +73,6 @@
             layers: [gmaps]
         });
 
-        
-        var uavsar2 = L.tileLayer('/static/alltiles/'+alltiles[0].fullname+'/{z}/{x}/{-y}.png',{
-            bounds: L.latLngBounds(alltiles[0].southwest,alltiles[0].northeast),
-            opacity: 0.7,
-            attribution: "",
-            minNativeZoom: 0,
-            maxNativeZoom: 12,
-            minZoom: 0,
-            maxZoom: 20,
-        });
         //uavsars.addLayer(uavsar2);
 
         // setup draw layer
@@ -94,17 +90,35 @@
                 "test":gmaps
             },
             "UAVSAR": {
-                "1": uavsar2,
-                "2": uavsar
+                "100": uavsar
             },
-            'drawlayer': {
+            "drawlayer": {
                 "test":drawnItems
             }
         };
+        console.log(groupedOverlays[1])
+        for( i=0 ; i<alltiles.length; i++){
+            var uavsar_i = L.tileLayer('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
+                bounds: L.latLngBounds(alltiles[i].southwest,alltiles[i].northeast),
+                opacity: 0.7,
+                attribution: "",
+                minNativeZoom: 0,
+                maxNativeZoom: 12,
+                minZoom: 0,
+                maxZoom: 20,
+            });
+        }
 
+        var options = {
+          // Make the "Landmarks" group exclusive (use radio inputs)
+          exclusiveGroups: ["OpenStreet","drawlayer"],
+          // Show a checkbox next to non-exclusive group labels for toggling all
+          groupCheckboxes: true,
+          collapsed: false
+        };
         var shapes = [];
         // Add base layers
-        L.control.groupedLayers(null, groupedOverlays, {collapsed: false}).addTo(map);
+        L.control.groupedLayers(null, groupedOverlays, options).addTo(map);
         map.addControl(new L.Control.Draw({
             /*edit: {
                 featureGroup: drawnItems,
