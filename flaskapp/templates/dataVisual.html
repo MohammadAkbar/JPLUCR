@@ -52,20 +52,32 @@
                 id:1, 
                 name:'colora',
                 fullname:'colora_32913_17090_008_170903_L090_CX_01_pauli',
-                southwest: L.latLng(-96.7494890,  28.5997041),
-                northeast: L.latLng(-95.6295661,  30.0543760),
+                southwest: L.latLng(28.5997041, -96.7494890),
+                northeast: L.latLng(30.0543760, -95.6295661),
             }
         ];
 
         var uavsars = L.featureGroup();
         // Create Map data with open street view data
         var map = L.map('mapid', {
-            center: [29.4898508766, -94.1802658885],
+            center: [29.3270400, -96.1895275],
             zoom: 12,
             minZoom: 1,
             maxZoom: 20,
             layers: [gmaps]
         });
+
+        
+        var uavsar2 = L.tileLayer('/static/alltiles/'+alltiles[0].fullname+'/{z}/{x}/{-y}.png',{
+            bounds: L.latLngBounds(alltiles[0].southwest,alltiles[0].northeast),
+            opacity: 0.7,
+            attribution: "",
+            minNativeZoom: 0,
+            maxNativeZoom: 12,
+            minZoom: 0,
+            maxZoom: 20,
+        });
+        //uavsars.addLayer(uavsar2);
 
         // setup draw layer
         var drawnItems = L.featureGroup().addTo(map);
