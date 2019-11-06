@@ -31,6 +31,11 @@
             }
         );
 
+        var geom = {"type":"MultiPolygon","coordinates":[
+                [[
+                [-96.747753,29.945783],[-96.553166,30.049649],[-95.633558,28.710675],[-95.826213,28.603183]
+                ]]
+                ]}
         var alltiles = [
             {
                 id:1, 
@@ -39,11 +44,6 @@
                 southwest: L.latLng(28.5997041, -96.7494890),
                 northeast: L.latLng(30.0543760, -95.6295661),
                 center: L.latLng(29.3270400,-96.1895275),
-                geom: {"type":"MultiPolygon","coordinates":[
-                [[
-                [-96.747753,29.945783],[-96.553166,30.049649],[-95.633558,28.710675],[-95.826213,28.603183]
-                ]]
-                ]}
             },
             {
                 id:2, 
@@ -178,7 +178,7 @@
         };
         console.log(groupedOverlays.UAVSAR)
         for( i=0 ; i<alltiles.length; i++){
-            var uavsar_i = L.tileLayer.boundaryCanvas('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
+            var uavsar_i = L.TileLayer.boundaryCanvas('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
                 bounds: L.latLngBounds(alltiles[i].southwest,alltiles[i].northeast),
                 opacity: 0.7,
                 attribution: "",
@@ -186,7 +186,7 @@
                 maxNativeZoom: 15,
                 minZoom: 0,
                 maxZoom: 20,
-                boundary: alltiles[i].geom 
+                boundary: geom
             });
             var m = L.marker(alltiles[i].center,{title:alltiles[i].name});
             m.addTo(map);
