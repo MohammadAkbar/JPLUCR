@@ -89,15 +89,18 @@
             {id_list:2, name:'Urban',token:'urban',color:'#79ed98'}
         ]
 
-        var overlaymaps = {
+        var groupedOverlaymaps = {
             "OpenStreet": gmaps,
-            "UAVSAR": [uavsar2,uavsar],
+            "UAVSAR": {
+                "1": uavsar2,
+                "2": uavsar
+            },
             'drawlayer': drawnItems
         };
 
         var shapes = [];
         // Add base layers
-        L.control.layers(null, overlaymaps, {collapsed: false}).addTo(map);
+        L.control.groupedLayers(null, overlaymaps, {collapsed: false}).addTo(map);
         map.addControl(new L.Control.Draw({
             /*edit: {
                 featureGroup: drawnItems,
