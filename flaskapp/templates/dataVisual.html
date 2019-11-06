@@ -96,7 +96,7 @@
                 "test":drawnItems
             }
         };
-        console.log(groupedOverlays[1])
+        console.log(groupedOverlays.UAVSAR)
         for( i=0 ; i<alltiles.length; i++){
             var uavsar_i = L.tileLayer('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
                 bounds: L.latLngBounds(alltiles[i].southwest,alltiles[i].northeast),
