@@ -132,8 +132,9 @@
                 minZoom: 0,
                 maxZoom: 20,
             });
-            var m = L.marker(alltiles[i].center).addTo(map);
+            var m = L.marker(alltiles[i].center);
             m.title = alltiles[i].name;
+            m.addTo(map);
             groupedOverlays.UAVSAR[alltiles[i].name]=uavsar_i;
         }
 
