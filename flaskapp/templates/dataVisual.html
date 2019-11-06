@@ -31,22 +31,6 @@
             }
         );
 
-        // set south-west and north-east bounds
-		var southWest = L.latLng(29.4898508766, -94.1802658885);
-        var northEast = L.latLng(30.906667, -95.285761);
-        var mybounds = L.latLngBounds(southWest, northEast);
-
-        // load custom tile layer with custom nasa data
-        var uavsar = L.tileLayer('/static/paulitiles/{z}/{x}/{-y}.png', {
-        	bounds:mybounds,
-        	opacity: 0.7, 
-        	attribution: "",
-			minNativeZoom: 0,
-			maxNativeZoom: 16,
-			minZoom: 0,
-			maxZoom: 20,
-        });
-
         var alltiles = [
             {
                 id:1, 
@@ -194,7 +178,7 @@
                 opacity: 0.7,
                 attribution: "",
                 minNativeZoom: 0,
-                maxNativeZoom: 12,
+                maxNativeZoom: 15,
                 minZoom: 0,
                 maxZoom: 20,
             });
