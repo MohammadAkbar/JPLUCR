@@ -57,7 +57,7 @@
             }
         ];
 
-
+        var uavsars = L.featureGroup().addTo(map);
         // Create Map data with open street view data
         var map = L.map('mapid', {
             center: [-96.1895275,  29.3270400],
@@ -67,7 +67,7 @@
             layers: [gmaps,uavsars]
         });
 
-        var uavsars = L.featureGroup().addTo(map);
+        
         var uavsar2 = L.tileLayer('/static/alltiles/'+alltiles[0].fullname+'/{z}/{x}/{-y}.png',{
             bounds: L.latLngBounds(alltiles[0].southwest,alltiles[0].northeast),
             opacity: 0.7,
