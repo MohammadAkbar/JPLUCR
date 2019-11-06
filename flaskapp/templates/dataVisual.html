@@ -39,6 +39,7 @@
                 southwest: L.latLng(28.5997041, -96.7494890),
                 northeast: L.latLng(30.0543760, -95.6295661),
                 center: L.latLng(29.3270400,-96.1895275)
+                geom: {"type":"MultiPolygon","coordinates":[[[-96.747753,29.945783],[-96.553166,30.049649],[-95.633558,28.710675],[-95.826213,28.603183],[-96.747753,29.945783]]]};
             },
             {
                 id:2, 
@@ -46,7 +47,7 @@
                 fullname:'congar_11800_18069_009_180923_L090_CX_01_pauli',
                 southwest: L.latLng(32.9830551, -81.2265250),
                 northeast: L.latLng(34.0524740, -79.1116336),
-                center: L.latLng(33.5177646,-80.1690793)
+                center: L.latLng(33.5177646,-80.1690793),
             },
             {
                 id:3, 
@@ -173,7 +174,7 @@
         };
         console.log(groupedOverlays.UAVSAR)
         for( i=0 ; i<alltiles.length; i++){
-            var uavsar_i = L.tileLayer('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
+            var uavsar_i = L.tileLayer.boundaryCanvas('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
                 bounds: L.latLngBounds(alltiles[i].southwest,alltiles[i].northeast),
                 opacity: 0.7,
                 attribution: "",
@@ -181,7 +182,7 @@
                 maxNativeZoom: 15,
                 minZoom: 0,
                 maxZoom: 20,
-                type: 'raster'
+                boundary: alltiles[i].geom 
             });
             var m = L.marker(alltiles[i].center,{title:alltiles[i].name});
             m.addTo(map);
