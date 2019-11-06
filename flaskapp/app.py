@@ -2,8 +2,6 @@ from __future__ import print_function
 from flask import Flask, render_template, url_for, request, jsonify
 from flask_navigation import Navigation
 from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 from flask_login import LoginManager
 import json
 import os
