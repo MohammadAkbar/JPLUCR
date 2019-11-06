@@ -77,63 +77,6 @@
             layers: [gmaps,uavsars]
         });
 
-        // setup load data button
-        $(document).ready(function(){
-            $("#load").click(function(){
-                /*
-                $.ajax({
-                    type : "POST",
-                    url  : "{{url_for('load')}}",
-                    contentType: 'application/json;charset=utf-8',
-                    data : JSON.stringify({username:"testuser"}),
-                    dataType: "json",
-                    success: function (response) {
-                        console.log(response);
-                        var text = response;
-                        console.log(text);
-                        console.log("maybe");
-                        //console.log(response["jsondata"]);
-                        //var text = '{ "features" : '+response["jsondata"] + '}';
-                        //console.log(text);
-                        //var obj = JSON.parse(text);
-
-                    },
-                    error: function () {
-                        console.log('error');
-                    }
-                });
-                */
-            });
-            $("#save").click(function(){
-                var d = drawnItems.toGeoJSON();
-                console.log(d);
-                var features_length = d.features.length;
-                console.log(features_length);
-                console.log(shapes);
-                /*
-                //d.username="testuser";
-                var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(d));
-                var db_data = JSON.stringify(d);
-                var back = JSON.parse(db_data);
-                console.log(back);
-                console.log
-                $.ajax({
-                    type : "POST",
-                    url  : "{{url_for('save')}}",
-                    contentType: 'application/json;charset=utf-8',
-                    data : {'data' : db_data},
-                    dataType: "json",
-                    success: function (callback) {
-                        console.log('sucess');
-                    },
-                    error: function () {
-                        console.log('error');
-                    }
-                });
-                */
-            });
-        });
-
         // setup draw layer
         var drawnItems = L.featureGroup().addTo(map);
         var classificationPicked = false;

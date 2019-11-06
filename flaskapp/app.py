@@ -12,62 +12,6 @@ import sys
 
 app = Flask(__name__)
 
-# database
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir,'db.sqlite')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
-
-class User(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String(100),unique=True)
-	data = db.Column(db.String())
-
-	def __init__(self,username,data):
-		self.username=username
-		self.data=data
-# user schema
-class UserSchema(ma.Schema):
-	class Meta:
-		fields = ('id','username','data')
-
-# init schema		
-user_schema = UserSchema(strict=True)
-users_schema = UserSchema(many=True,strict=True)
-
-@app.route('/load', methods=['GET','POST'])
-def load():
-	#nm = request.get_json()
-	nm = str(request.json['username'])
-	print(nm, file=sys.stderr)
-	#new_user = User("username","data")
-	userdata = User.query.filter_by(username=nm).first()
-	print(userdata.data, file=sys.stderr)
-
-	return jsonify(userdata.data)
-	#db.session.add(new_user)
-	#db.session.commit()
-	#return user_schema.jsonify(new_user)
-
-# Get user data
-@app.route('/save',methods=['GET','POST'])
-def save():
-	#nm = str(request.json["username"])
-	nm = "testuser"
-	u = User.query.filter_by(username=nm).first()
-	print(u.data, file=sys.stderr)
-	if u is None:
-		print("case1", file=sys.stderr)
-		new_user = User(nm,"temp")
-		db.session.add(new_user)
-		db.session.commit()
-		return jsonify(new_user.data)
-	else:
-		print(request.get_data(), file=sys.stderr)
-		u.data = request.get_data()
-		db.session.commit()
-		return jsonify(u.data)
 
 bootstrap = Bootstrap(app)
 
