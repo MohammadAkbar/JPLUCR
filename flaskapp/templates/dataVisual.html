@@ -7,6 +7,18 @@
         <h1 style="text-align: center">{{title}}</h1>
     </div>
     <a href="#" id="export" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style="margin-top: 20px;margin-bottom: 20px;">Download</a>
+    <!--
+    <div class="form-inline">
+        <div class="form-inline" id="button-addon4">
+            <form class="form-signin"  role="form">
+            <input type="text" class="form-control" placeholder="enter username">
+            <button id="load" class="btn btn-outline-secondary" type="button">Load</button>
+            <button id="save" class="btn btn-outline-secondary" type="button">Save</button>
+            <button class="btn btn-outline-secondary" type="button">Download Data</button>
+            </form>
+        </div>
+    </div>
+    -->
 	<div id="mapid" style="width:100%;height:400px;margin-bottom:40px;"></div>
 	<script>
         // create a satellite layer
@@ -35,16 +47,94 @@
 			maxZoom: 20,
         });
 
+        var alltiles = [
+            {
+                id:1, 
+                name:'colora',
+                fullname:'colora_32913_17090_008_170903_L090_CX_01_pauli',
+                southwest: L.latLng(-96.7494890,  28.5997041);
+                northeast: L.latLng(-95.6295661,  30.0543760);
+            }
+        ];
+        var uavsars = L.featureGroup().addTo(map);
+        var uavsar2 = L.tileLayer('/static/alltiles/'+alltiles[0].fullname+'/{z}/{x}/{-y}.png',{
+            bounds: L.latLngBounds(alltiles[0].southwest,alltiles[0].northeast),
+            opacity: 0.7,
+            attribution: "",
+            minNativeZoom: 0,
+            maxNativeZoom: 12,
+            minZoom: 0,
+            maxZoom: 20,
+        });
+        uavsars.addLayer(uavsar2);
+
         // Create Map data with open street view data
         var map = L.map('mapid', {
-            center: [30.1982589383, -94.7330134442],
+            center: [-96.1895275,  29.3270400],
             zoom: 12,
             minZoom: 1,
             maxZoom: 20,
-            layers: [gmaps,uavsar],
-	    zoomControl:false
+            layers: [gmaps,uavsar2]
         });
-	map.toggleFullscreen();
+
+        // setup load data button
+        $(document).ready(function(){
+            $("#load").click(function(){
+                /*
+                $.ajax({
+                    type : "POST",
+                    url  : "{{url_for('load')}}",
+                    contentType: 'application/json;charset=utf-8',
+                    data : JSON.stringify({username:"testuser"}),
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        var text = response;
+                        console.log(text);
+                        console.log("maybe");
+                        //console.log(response["jsondata"]);
+                        //var text = '{ "features" : '+response["jsondata"] + '}';
+                        //console.log(text);
+                        //var obj = JSON.parse(text);
+
+                    },
+                    error: function () {
+                        console.log('error');
+                    }
+                });
+                */
+            });
+            $("#save").click(function(){
+                var d = drawnItems.toGeoJSON();
+                console.log(d);
+                var features_length = d.features.length;
+                console.log(features_length);
+                console.log(shapes);
+                /*
+                //d.username="testuser";
+                var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(d));
+                var db_data = JSON.stringify(d);
+                var back = JSON.parse(db_data);
+                console.log(back);
+                console.log
+                $.ajax({
+                    type : "POST",
+                    url  : "{{url_for('save')}}",
+                    contentType: 'application/json;charset=utf-8',
+                    data : {'data' : db_data},
+                    dataType: "json",
+                    success: function (callback) {
+                        console.log('sucess');
+                    },
+                    error: function () {
+                        console.log('error');
+                    }
+                });
+                */
+            });
+        });
+
+        // setup draw layer
         var drawnItems = L.featureGroup().addTo(map);
         var classificationPicked = false;
         var last_layer;
@@ -56,14 +146,13 @@
 
         var overlaymaps = {
             "OpenStreet": gmaps,
-            "UAVSAR": uavsar,
+            "UAVSAR": uavsars,
             'drawlayer': drawnItems
         };
 
         var shapes = [];
         // Add base layers
         L.control.layers(null, overlaymaps, {collapsed: false}).addTo(map);
-        L.control.fullscreen().addTo(map);
         map.addControl(new L.Control.Draw({
             /*edit: {
                 featureGroup: drawnItems,
@@ -101,7 +190,6 @@
 
 
             var options = classifications.map(x=>x.token);
-            console.log(options);
             var coordinates = layer.getLatLngs()[0];
             var last = coordinates[0];
 
@@ -110,7 +198,7 @@
             
         });
         
-        function promptClassify( layer , options , latlng , shape){
+        function promptClassify( layer , options , latlng ){
             classificationPicked=false;
             var content = document.createElement("div");
             for( i=0 ; i<options.length; i++){
@@ -126,6 +214,7 @@
             for(i=0 ; i<options.length; i++){
                 $("#prompt_"+options[i]).click(
                     function(event) {
+                        console.log(layer);
                         var shape = layer.toGeoJSON();
                         shape.label=$(this).prop('value');
                         saveShape(shape);
@@ -138,9 +227,7 @@
         function saveShape(shape){
             shapes.push(shape);
             classificationPicked=true;
-            console.log(String(shape.label));
             var i = classifications.map(e => e.token).indexOf(String(shape.label));
-            console.log(i);
             last_layer.setStyle({
                 color: classifications[i].color,
                 fillColor: classifications[i].color
@@ -160,7 +247,6 @@
         document.getElementById('export').onclick = function(e) {
             console.log("clicked");
             if(shapes.length>0){
-                console.log("test");
                 var data = drawnItems.toGeoJSON();
                 var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
                 document.getElementById('export').setAttribute('href', 'data:' + convertedData);
