@@ -107,11 +107,12 @@
                 minZoom: 0,
                 maxZoom: 20,
             });
+            groupedOverlays.UAVSAR.append({i,uavsar_i});
         }
 
         var options = {
           // Make the "Landmarks" group exclusive (use radio inputs)
-          exclusiveGroups: ["OpenStreet","drawlayer"],
+          exclusiveGroups: ["OpenStreet","UAVSAR","drawlayer"],
           // Show a checkbox next to non-exclusive group labels for toggling all
           groupCheckboxes: true,
           collapsed: false
