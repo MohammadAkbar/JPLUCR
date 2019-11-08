@@ -10,7 +10,6 @@ import sys
 
 app = Flask(__name__)
 
-
 bootstrap = Bootstrap(app)
 
 nav = Navigation(app)
