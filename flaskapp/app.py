@@ -7,6 +7,7 @@ import json
 import os
 import sys
 from werkzeug.contrib.fixers import ProxyFix
+from flask_login import logout_user
 
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
@@ -17,6 +18,7 @@ bootstrap = Bootstrap(app)
 nav = Navigation(app)
 nav.Bar('top',[
     nav.Item('Homepage', 'index'),
+    nav.Item('Logout', 'logout')
 ])
 
 from flask_dance.contrib.google import make_google_blueprint, google
@@ -37,6 +39,19 @@ def index():
     resp = google.get("/oauth2/v2/userinfo")
     assert resp.ok, resp.text
     return render_template('dataVisual.html' , title='Data Visualization', email=resp.json()["email"])
+
+@app.route("/logout")
+def logout():
+    token = app.blueprints["google"].token["access_token"]
+    resp = google.post(
+        "https://accounts.google.com/o/oauth2/revoke",
+        params={"token": token},
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    assert resp.ok, resp.text
+    logout_user()        # Delete Flask-Login's session cookie
+    del blueprint.token  # Delete OAuth token from storage
+    return redirect(somewhere)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8000,threaded=True,debug=False, ssl_context='adhoc')
