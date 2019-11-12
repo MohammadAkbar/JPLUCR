@@ -17,8 +17,6 @@ bootstrap = Bootstrap(app)
 nav = Navigation(app)
 nav.Bar('top',[
     nav.Item('Homepage', 'index'),
-    nav.Item('Data Visualization', 'dataVisual'),
-    nav.Item('Classify Data', 'dataClassify')
 ])
 
 from flask_dance.contrib.google import make_google_blueprint, google
@@ -40,14 +38,6 @@ def index():
     assert resp.ok, resp.text
     return render_template('dataVisual.html' , title='Data Visualization' , email=resp.json()["email"])
     #return resp.text
-
-@app.route('/dataVisual')
-def dataVisual():
-    return render_template('dataVisual.html' , title='Data Visualization')
-    
-@app.route('/dataClassify')
-def dataClassify():
-    return render_template('dataClassify.html', title='Data Classify')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8000,threaded=True,debug=False, ssl_context='adhoc')
