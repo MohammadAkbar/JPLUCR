@@ -7,6 +7,8 @@ import json
 import os
 import sys
 
+os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+
 app = Flask(__name__)
 
 bootstrap = Bootstrap(app)
