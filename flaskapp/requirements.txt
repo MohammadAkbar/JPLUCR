@@ -1,2 +1,3 @@
 # Usage: pip install -r requirements.txt
 Flask-Dance==3.0.0
+Flask-SSLify==0.1.5
