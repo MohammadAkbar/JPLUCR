@@ -49,5 +49,5 @@ def dataClassify():
     return render_template('dataClassify.html', title='Data Classify')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=80,threaded=True,debug=False, ssl_context='adhoc')
+    app.run(host='0.0.0.0',port=8000,threaded=True,debug=False, ssl_context='adhoc')
     #app.run()
