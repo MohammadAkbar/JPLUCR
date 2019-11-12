@@ -9,12 +9,20 @@
     <div>
         <p>username:{{email}}</p>
     </div>
+    <!--
     <a href="#" id="export" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style="margin-top: 20px;margin-bottom: 20px;">Download</a>
+    -->
     <div class="form-inline">
         <div class="form-inline" id="button-addon4">
-            <button href="#" class="btn">Load</button>
-            <button href="#" class="btn">Save</button>
-            <button class="btn btn-outline-secondary" type="button">Download Data</button>
+            <a id="load" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
+                Load
+            </a>
+            <a id="save" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
+                Save
+            </a>
+            <a id="export" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
+                Download Data
+            </a>
         </div>
     </div>
 	<div id="mapid" style="width:100%;height:400px;margin-bottom:40px;"></div>
@@ -40,8 +48,6 @@
             fullscreenControl: true,
             doubleClickZoom: false
         });
-        //map.toggleFullscreen();
-        //uavsars.addLayer(uavsar2);
 
         // setup draw layer
         var drawnItems = L.featureGroup().addTo(map);
@@ -55,15 +61,14 @@
 
         var groupedOverlays = {
             "OpenStreet": {
-                "test":gmaps
+                "satellite view":gmaps
             },
             "UAVSAR": {
             },
             "drawlayer": {
-                "test":drawnItems
+                "polygons":drawnItems
             }
         };
-        console.log(groupedOverlays.UAVSAR)
         for( i=0 ; i<alltiles.length; i++){
             var uavsar_i = L.TileLayer.boundaryCanvas('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
                 bounds: L.latLngBounds(alltiles[i].southwest,alltiles[i].northeast),
@@ -88,6 +93,7 @@
           defaultChecked: true,
           collapsed: true
         };
+
         var shapes = [];
         // Add base layers
         L.control.groupedLayers(null, groupedOverlays, options).addTo(map);
@@ -155,9 +161,8 @@
             for(i=0 ; i<options.length; i++){
                 $("#prompt_"+options[i]).click(
                     function(event) {
-                        console.log(layer);
                         var shape = layer.toGeoJSON();
-                        shape.label=$(this).prop('value');
+                        shape.properties.label=$(this).prop('value');
                         saveShape(shape);
                     }               
                 );
@@ -168,7 +173,7 @@
         function saveShape(shape){
             shapes.push(shape);
             classificationPicked=true;
-            var i = classifications.map(e => e.token).indexOf(String(shape.label));
+            var i = classifications.map(e => e.token).indexOf(String(shape.properties.label));
             last_layer.setStyle({
                 color: classifications[i].color,
                 fillColor: classifications[i].color
@@ -185,7 +190,7 @@
             }
         });
         
-        document.getElementById('export').onclick = function(e) {
+        /*document.getElementById('export').onclick = function(e) {
             console.log("clicked");
             if(shapes.length>0){
                 var data = drawnItems.toGeoJSON();
@@ -194,7 +199,61 @@
                 document.getElementById('export').setAttribute('download','data.geojson');
             }
         }
+        */
+        $(document).ready(function() {
+            // called when load button is pressed
+            $("#load").click(function(){
+                console.log("load");
+                console.log("{{email}}");
+            });
+            // called when save button is pressed
+            $("#save").click(function(){
+                console.log("save");
+                var saveData ="";
+                saveData += "{ \n \"type\": \"FeatureCollection\", \n ";
+                saveData += "\"features\": \n[ \n";
+                for( var s in shapes){
+                    console.log(shapes[s].geometry.coordinates[0]);
+                    saveData += "{ \n";
 
+                        saveData += "\"type\": \"Feature\", \n";
+                        saveData += "\"geometry\": { \n";
+                            saveData += "\"type\": \"Polygon\", \n";
+                            saveData += "\"coordinates\": [[\n";
+                            for ( var c in shapes[s].geometry.coordinates[0])
+                                saveData += "[";
+                                saveData += shapes[s].geometry.coordinates[0][c][0];
+                                saveData += ","
+                                saveData += shapes[s].geometry.coordinates[0][c][1];
+                                saveData += "]";
+                            saveData += "]]\n";
+                        saveData += "}, \n";
+                        saveData += "\"properties\": { \n";
+                            saveData += "\"label\":\"" + shapes[s].properties.label + "\" \n";
+                        saveData += "} \n";
+
+                    saveData += "} \n";
+                    if( s < shapes.length - 1 ){
+                        saveData += ",";
+                    }
+                }
+                saveData += "] \n";
+                saveData += "}";
+                console.log(saveData);
+            });
+
+            // Disable dragging when user's cursor enters the element
+            $(".leaflet-control-container").mouseover( function () {
+                map.dragging.disable();
+                map.scrollWheelZoom.disable();
+            });
+
+            // Re-enable dragging when user's cursor leaves the element
+            $(".leaflet-control-container").mouseout( function () {
+                map.dragging.enable();
+                map.scrollWheelZoom.enable();
+            });
+        });
 	</script>
 
 {% endblock %}

@@ -30,6 +30,8 @@ blueprint = make_google_blueprint(
 )
 app.register_blueprint(blueprint, url_prefix="/login")
 
+testing = True
+
 @app.route('/')
 def index():
     if not google.authorized:
@@ -38,7 +40,10 @@ def index():
     assert resp.ok, resp.text
     return render_template('dataVisual.html' , title='Data Visualization' , email=resp.json()["email"])
     #return resp.text
-
+@app.route('/testing')
+def testing():
+    return render_template('dataVisual.html' , title='Data Visualization' , email='test@test.com')
+    #return resp.text
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=8000,threaded=True,debug=False, ssl_context='adhoc')
+    app.run(host='0.0.0.0',port=8000,threaded=True,debug=True, ssl_context='adhoc')
     #app.run()
