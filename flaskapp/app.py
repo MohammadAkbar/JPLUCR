@@ -36,7 +36,7 @@ blueprint = make_google_blueprint(
     hosted_domain=None,
     offline=True
 )
-app.register_blueprint(blueprint, url_prefix="/login")
+app.register_blueprint(blueprint, url_prefix="/google_login")
 
 @app.route("/google_login")
 def google_login():
