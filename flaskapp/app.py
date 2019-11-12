@@ -38,7 +38,7 @@ def index():
         return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
     assert resp.ok, resp.text
-    return "You are @{login} with google".format(login=resp.json()["email"])
+    return render_template('dataVisual.html' , title='Data Visualization', email=resp.json()["email"])
 
 @app.route('/dataVisual')
 def dataVisual():
