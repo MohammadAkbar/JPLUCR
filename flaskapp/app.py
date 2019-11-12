@@ -2,12 +2,11 @@ from __future__ import print_function
 from flask import Flask, render_template, url_for, request, jsonify, redirect, Blueprint
 from flask_navigation import Navigation
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager
+from flask_login import LoginManager , logout_user
 import json
 import os
 import sys
 from werkzeug.contrib.fixers import ProxyFix
-from flask_login import logout_user
 
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
