@@ -25,30 +25,17 @@ blueprint = make_google_blueprint(
     client_id="1045884176358-7ujjr3afn72o8fpatg58gvtkbf48s9o7.apps.googleusercontent.com",
     client_secret="wxpbWHrKpva3SsPbeobgzLZK",
     scope=['profile', 'email'],
-    reprompt_consent=False,
-    reprompt_select_account=False,
-    redirect_url=None,
-    redirect_to=None,
-    login_url=None,
-    authorized_url=None,
-    session_class=None,
-    storage=None,
-    hosted_domain=None,
     offline=True
 )
-app.register_blueprint(blueprint, url_prefix="/google_login")
+app.register_blueprint(blueprint, url_prefix="/login")
 
-@app.route("/google_login")
-def google_login():
+@app.route('/')
+def index():
     if not google.authorized:
         return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
     assert resp.ok, resp.text
     return resp.text
-
-@app.route('/')
-def index():
-    return render_template('dataVisual.html' , title='Homepage')
 
 @app.route('/dataVisual')
 def dataVisual():
