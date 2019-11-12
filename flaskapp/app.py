@@ -18,6 +18,11 @@ nav.Bar('top',[
     nav.Item('Classify Data', 'dataClassify')
 ])
 
+
+app.config.update({
+    'OAUTH1_PROVIDER_ENFORCE_SSL': False
+})
+
 from flask_dance.contrib.google import make_google_blueprint, google
 app.secret_key = "supersekrit"  # Replace this with your own secret!
 
