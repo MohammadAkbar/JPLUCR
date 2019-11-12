@@ -2,7 +2,7 @@ from __future__ import print_function
 from flask import Flask, render_template, url_for, request, jsonify, redirect, Blueprint
 from flask_navigation import Navigation
 from flask_bootstrap import Bootstrap
-from flask_login import LoginManager , logout_user
+from flask_login import LoginManager
 import json
 import os
 import sys
@@ -16,7 +16,9 @@ bootstrap = Bootstrap(app)
 
 nav = Navigation(app)
 nav.Bar('top',[
-    nav.Item('Homepage', 'index')
+    nav.Item('Homepage', 'index'),
+    nav.Item('Data Visualization', 'dataVisual'),
+    nav.Item('Classify Data', 'dataClassify')
 ])
 
 from flask_dance.contrib.google import make_google_blueprint, google
@@ -36,7 +38,15 @@ def index():
         return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
     assert resp.ok, resp.text
-    return render_template('dataVisual.html' , title='Data Visualization', email=resp.json()["email"])
+    return render_template('dataVisual.html' , title='Data Visualization',email=resp.json()["email"])
+
+@app.route('/dataVisual')
+def dataVisual():
+    return render_template('dataVisual.html' , title='Data Visualization')
+    
+@app.route('/dataClassify')
+def dataClassify():
+    return render_template('dataClassify.html', title='Data Classify')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8000,threaded=True,debug=False, ssl_context='adhoc')
