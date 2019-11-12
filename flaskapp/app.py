@@ -6,12 +6,10 @@ from flask_login import LoginManager
 import json
 import os
 import sys
-from werkzeug.contrib.fixers import ProxyFix
 
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app)
 bootstrap = Bootstrap(app)
 
 nav = Navigation(app)
