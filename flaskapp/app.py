@@ -37,9 +37,8 @@ def index():
     if not google.authorized:
         return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
-    #assert resp.ok, resp.text
-    return "You are @{login} with google".format(login=resp.json()["email"])
-    #return render_template('dataVisual.html' , title='Data Visualization',resp.json()["email"])
+    assert resp.ok, resp.text
+    return resp.text
 
 @app.route('/dataVisual')
 def dataVisual():
