@@ -12,6 +12,7 @@
     <!--
     <a href="#" id="export" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style="margin-top: 20px;margin-bottom: 20px;">Download</a>
     -->
+    <!--
     <div class="form-inline">
         <div class="form-inline" id="button-addon4">
             <a id="load" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
@@ -25,7 +26,28 @@
             </a>
         </div>
     </div>
-	<div id="mapid" style="width:100%;height:400px;margin-bottom:40px;"></div>
+    -->
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <div id="mapid" style="width:100%;height:400px;margin-bottom:40px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-group">
+                {% for user in users %}
+                    <a href="#" id="useremails" value="{{user.email}}" class="list-group-item list-group-item-action">{{user.email}}</a>
+                {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 	<script>
         // create a satellite layer
         var gmaps = L.tileLayer(
@@ -197,113 +219,41 @@
         });
         $(document).ready(function() {
             // called when load button is pressed
-            $("#load").click(function(){
-
-                function polystyle(feature) {
-                    var i = classifications.map(x=>x.token).indexOf(String(feature.properties.label));
-                    console.log(String(classifications[i].color));
-                    return {
-                        stroke: true,
-                        color: classifications[i].color,
-                        fillColor: classifications[i].color,
-                        weight: 2,
-                        opacity: 1,
-                        fillOpacity: 0.5
-                    };
-                }
-
-                var posting = $.post( "/loaddata", {
-                    email: "{{email}}" 
-                });
-                posting.done(function( data ) {
-                    for(var i in drawnItems._layers){
-                        drawnItems.removeLayer(drawnItems._layers[i]);
+            $('#useremails').each(function(index) {
+                $(this).on("click", function(){
+                    // For the boolean value
+                    var email = $(this).attr('value');
+                    function polystyle(feature) {
+                        var i = classifications.map(x=>x.token).indexOf(String(feature.properties.label));
+                        return {
+                            stroke: true,
+                            color: classifications[i].color,
+                            fillColor: classifications[i].color,
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.5
+                        };
                     }
-                    var jsondata = JSON.parse(data);
-                    
-                    L.geoJson(jsondata, {
-                          onEachFeature: onEachFeature
-                    ,style: polystyle});
-                    function onEachFeature(feature, layer) {
-                        drawnItems.addLayer(layer);
-                        layer.label=String(feature.properties.label);
-                    }
-                    
+
+                    var posting = $.post( "/loaddata", {
+                        email: email 
+                    });
+                    posting.done(function( data ) {
+                        for(var i in drawnItems._layers){
+                            drawnItems.removeLayer(drawnItems._layers[i]);
+                        }
+                        var jsondata = JSON.parse(data);
+                        
+                        L.geoJson(jsondata, {
+                              onEachFeature: onEachFeature
+                        ,style: polystyle});
+                        function onEachFeature(feature, layer) {
+                            drawnItems.addLayer(layer);
+                            layer.label=String(feature.properties.label);
+                        }
+                        
+                    });
                 });
-            });
-
-            // called when save button is pressed
-            function genJSONString(){
-                var saveData ="";
-                saveData += "{ \n \"type\": \"FeatureCollection\", \n ";
-                saveData += "\"features\": \n[ \n";
-                shapes = drawnItems.toGeoJSON().features;
-                labels = []
-                drawnItems.eachLayer(function (layer) {
-                    //console.log(layer.label);
-                    labels.push(layer.label);
-                });
-                for( var s in shapes){
-                    saveData += "{ \n";
-
-                        saveData += "\"type\": \"Feature\", \n";
-                        saveData += "\"geometry\": { \n";
-                            saveData += "\"type\": \"Polygon\", \n";
-                            saveData += "\"coordinates\": [[\n";
-                            for ( var c in shapes[s].geometry.coordinates[0]){
-                                saveData += "[";
-                                saveData += shapes[s].geometry.coordinates[0][c][0];
-                                saveData += ","
-                                saveData += shapes[s].geometry.coordinates[0][c][1];
-                                saveData += "]";
-                                if( c < shapes[s].geometry.coordinates[0].length - 1 ){
-                                    saveData += ",";
-                                }
-                            }
-                            saveData += "]]\n";
-                        saveData += "}, \n";
-                        saveData += "\"properties\": { \n";
-                            saveData += "\"label\":\"" + labels[s] + "\" \n";
-                        saveData += "} \n";
-
-                    saveData += "} \n";
-                    if( s < shapes.length - 1 ){
-                        saveData += ",";
-                    }
-                }
-                saveData += "] \n";
-                saveData += "}";
-                return saveData;
-            }
-
-            $("#save").click(function(){
-                var saveData = genJSONString();
-                var posting = $.post( "/savedata", {
-                    javascript_data: saveData,
-                    email: "{{email}}"
-                });
-                posting.done(function( data ) {
-                    //console.log(data);
-                });
-            });
-
-            function download(filename, text) {
-                var element = document.createElement('a');
-                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-                element.setAttribute('download', filename);
-
-                element.style.display = 'none';
-                document.body.appendChild(element);
-
-                element.click();
-
-                document.body.removeChild(element);
-            }
-
-            // Start file download.
-            $("#download").click(function(){
-                var saveData = genJSONString();
-                download("data.geojson",saveData);
             });
             // Disable dragging when user's cursor enters the element
             $(".leaflet-control-container").mouseover( function () {

@@ -90,7 +90,8 @@ def load_map_data_string():
 
 @app.route('/viewData')
 def viewData():
-	return render_template('dataVisual.html' , title='Data Visualization' , email="none")
+	users = User.query.order_by(User.email).all()
+	return render_template('dataVisual.html' , title='Data Visualization' , email="none", users=users)
 
 @app.route('/classifyData')
 def classifyData():
