@@ -53,10 +53,7 @@ testing = True
 
 @app.route('/')
 def index():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
-    resp = google.get("/oauth2/v2/userinfo")
-    assert resp.ok, resp.text
+	users = User.query.order_by(User.email).all()
     return render_template('dataVisual.html' , title='Data Visualization' , email="none", users=users)
     #return resp.text
 
