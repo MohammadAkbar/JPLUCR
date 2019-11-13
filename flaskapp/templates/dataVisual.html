@@ -57,7 +57,7 @@
             {id_list:1, name:'Flooded',token:'flooded',color:'#afdeed'},
             {id_list:2, name:'Arid',token:'arid',color:'#e5ebb2'},
             {id_list:2, name:'Urban',token:'urban',color:'#79ed98'}
-        ]
+        ];
 
         var groupedOverlays = {
             "OpenStreet": {
@@ -75,7 +75,7 @@
                 opacity: 1.0,
                 attribution: "",
                 minNativeZoom: 0,
-                maxNativeZoom: 16,
+                maxNativeZoom: 10,
                 minZoom: 0,
                 maxZoom: 20,
                 boundary: alltiles[i].geom
@@ -163,6 +163,8 @@
                     function(event) {
                         var shape = layer.toGeoJSON();
                         shape.properties.label=$(this).prop('value');
+                        layer.label=$(this).prop('value');
+                        //layer.feature.properties.label=$(this).prop('value');
                         saveShape(shape);
                     }               
                 );
@@ -189,22 +191,41 @@
                 //last_layer.setStyle({color:'red'});
             }
         });
-        
-        /*document.getElementById('export').onclick = function(e) {
-            console.log("clicked");
-            if(shapes.length>0){
-                var data = drawnItems.toGeoJSON();
-                var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
-                document.getElementById('export').setAttribute('href', 'data:' + convertedData);
-                document.getElementById('export').setAttribute('download','data.geojson');
-            }
-        }
-        */
         $(document).ready(function() {
             // called when load button is pressed
             $("#load").click(function(){
-                console.log("load");
-                console.log("{{email}}");
+
+                function polystyle(feature) {
+                    var i = classifications.map(x=>x.token).indexOf(String(feature.properties.label));
+                    console.log(String(classifications[i].color));
+                    return {
+                        stroke: true,
+                        color: classifications[i].color,
+                        fillColor: classifications[i].color,
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.4
+                    };
+                }
+
+                var posting = $.post( "/loaddata", {
+                    javascript_data: "{{email}}" 
+                });
+                posting.done(function( data ) {
+                    for(var i in drawnItems._layers){
+                        drawnItems.removeLayer(drawnItems._layers[i]);
+                    }
+                    var jsondata = JSON.parse(data);
+                    
+                    L.geoJson(jsondata, {
+                          onEachFeature: onEachFeature
+                    ,style: polystyle});
+                    function onEachFeature(feature, layer) {
+                        drawnItems.addLayer(layer);
+                        layer.label=String(feature.properties.label);
+                    }
+                    
+                });
             });
             // called when save button is pressed
             $("#save").click(function(){
@@ -212,24 +233,33 @@
                 var saveData ="";
                 saveData += "{ \n \"type\": \"FeatureCollection\", \n ";
                 saveData += "\"features\": \n[ \n";
+                shapes = drawnItems.toGeoJSON().features;
+                labels = []
+                drawnItems.eachLayer(function (layer) {
+                    //console.log(layer.label);
+                    labels.push(layer.label);
+                });
                 for( var s in shapes){
-                    console.log(shapes[s].geometry.coordinates[0]);
                     saveData += "{ \n";
 
                         saveData += "\"type\": \"Feature\", \n";
                         saveData += "\"geometry\": { \n";
                             saveData += "\"type\": \"Polygon\", \n";
                             saveData += "\"coordinates\": [[\n";
-                            for ( var c in shapes[s].geometry.coordinates[0])
+                            for ( var c in shapes[s].geometry.coordinates[0]){
                                 saveData += "[";
                                 saveData += shapes[s].geometry.coordinates[0][c][0];
                                 saveData += ","
                                 saveData += shapes[s].geometry.coordinates[0][c][1];
                                 saveData += "]";
+                                if( c < shapes[s].geometry.coordinates[0].length - 1 ){
+                                    saveData += ",";
+                                }
+                            }
                             saveData += "]]\n";
                         saveData += "}, \n";
                         saveData += "\"properties\": { \n";
-                            saveData += "\"label\":\"" + shapes[s].properties.label + "\" \n";
+                            saveData += "\"label\":\"" + labels[s] + "\" \n";
                         saveData += "} \n";
 
                     saveData += "} \n";
@@ -240,6 +270,12 @@
                 saveData += "] \n";
                 saveData += "}";
                 console.log(saveData);
+                var posting = $.post( "/savedata", {
+                    javascript_data: saveData
+                });
+                posting.done(function( data ) {
+                    console.log(data);
+                });
             });
 
             // Disable dragging when user's cursor enters the element

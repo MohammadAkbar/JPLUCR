@@ -7,11 +7,28 @@ import json
 import os
 import sys
 from werkzeug.contrib.fixers import ProxyFix
+from flask_sqlalchemy import SQLAlchemy
+
 
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
 app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+db = SQLAlchemy(app)
+
+class User(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	email = db.Column(db.String, unique=True, nullable=False)
+	data = db.Column(db.String, unique=False, nullable=True)
+	def __init__(self, email, data ):
+		self.email = email
+		self.data = data
+db.create_all()
+#users = User.query.all()
 app.wsgi_app = ProxyFix(app.wsgi_app)
+
 bootstrap = Bootstrap(app)
 
 nav = Navigation(app)
@@ -40,10 +57,43 @@ def index():
     assert resp.ok, resp.text
     return render_template('dataVisual.html' , title='Data Visualization' , email=resp.json()["email"])
     #return resp.text
+
 @app.route('/testing')
 def testing():
     return render_template('dataVisual.html' , title='Data Visualization' , email='test@test.com')
     #return resp.text
+
+@app.route('/savedata', methods = ['POST'])
+def get_post_javascript_data():
+	jsdata = str(request.form['javascript_data'])
+
+	u = User.query.filter_by(email='test@test.com').first()
+	if u is None:
+		# if user does NOT have record , create new record
+		newuser = User(email="test@test.com", data=jsdata)
+		db.session.add(newuser)
+		db.session.commit()
+	else:
+		# if user does have record , update record data
+		u.data=jsdata
+		db.session.commit()	
+	return "sucess"
+
+@app.route('/loaddata' , methods = ['POST'])
+def load_map_data_string():
+	jsdata = str(request.form['javascript_data'])
+	u = User.query.filter_by(email=jsdata).first()
+	print('user '+u.data, file=sys.stderr)
+	return u.data
+#def get_post_javascript_data():
+#jsdata = str(request.form['javascript_data'])
+#u = User(email="example@test.com", data="test")
+
+#db.session.add(u)
+#db.session.commit()
+#print('postdata '+jsdata + ' \n stringtest: '+str(stringtest), file=sys.stderr)
+#return "sucess"
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8000,threaded=True,debug=True, ssl_context='adhoc')
     #app.run()
