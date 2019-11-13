@@ -41,7 +41,7 @@
           <div class="card-body">
             <ul class="list-group">
                 {% for user in users %}
-                    <a href="#" id="useremails" value="{{user.email}}" class="list-group-item list-group-item-action">{{user.email}}</a>
+                    <a href="#" id="useremails_{{user.email}}" role="button" value="{{user.email}}" class="list-group-item">{{user.email}}</a>
                 {% endfor %}
             </ul>
           </div>
@@ -218,8 +218,7 @@
             }
         });
         $(document).ready(function() {
-            // called when load button is pressed
-            $('#useremails').each(function(index) {
+            $.each($('.list-group-item'), function (index, value) {
                 $(this).on("click", function(){
                     console.log("click");
                     // For the boolean value
