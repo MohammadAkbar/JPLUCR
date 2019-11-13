@@ -123,7 +123,7 @@
         var shapes = [];
         // Add base layers
         L.control.groupedLayers(null, groupedOverlays, options).addTo(map);
-        map.addControl(new L.Control.Draw({
+        /*map.addControl(new L.Control.Draw({
             edit: {
                 featureGroup: drawnItems,
                 poly: {
@@ -150,7 +150,7 @@
                 rectangle: false,
                 marker:false
             }
-        }));
+        }));*/
         map.on('draw:drawvertex',
         function (e) {
             $(".leaflet-marker-icon.leaflet-div-icon.leaflet-editing-icon.leaflet-touch-icon.leaflet-zoom-animated.leaflet-interactive:first").css({ 'background-color': 'red' });
