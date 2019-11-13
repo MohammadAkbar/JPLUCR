@@ -223,6 +223,7 @@
                 $(this).on("click", function(){
                     // For the boolean value
                     var theemail = String($(this).attr('value'));
+                    console.log(theemail);
                     function polystyle(feature) {
                         var i = classifications.map(x=>x.token).indexOf(String(feature.properties.label));
                         return {

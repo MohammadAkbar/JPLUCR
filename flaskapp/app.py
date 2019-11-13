@@ -85,6 +85,7 @@ def get_post_javascript_data():
 def load_map_data_string():
 	email = str(request.form['email'])
 	u = User.query.filter_by(email=email).first()
+	print('user '+u.data, file=sys.stderr)
 	return u.data
 
 @app.route('/viewData')
