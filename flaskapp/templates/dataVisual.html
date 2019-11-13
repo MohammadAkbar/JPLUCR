@@ -222,7 +222,7 @@
             $('#useremails').each(function(index) {
                 $(this).on("click", function(){
                     // For the boolean value
-                    var email = $(this).attr('value');
+                    var theemail = String($(this).attr('value'));
                     function polystyle(feature) {
                         var i = classifications.map(x=>x.token).indexOf(String(feature.properties.label));
                         return {
@@ -236,7 +236,7 @@
                     }
 
                     var posting = $.post( "/loaddata", {
-                        email: email 
+                        email: theemail 
                     });
                     posting.done(function( data ) {
                         for(var i in drawnItems._layers){
