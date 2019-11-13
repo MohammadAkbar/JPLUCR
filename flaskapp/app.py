@@ -57,7 +57,7 @@ def index():
         return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
     assert resp.ok, resp.text
-    return render_template('dataVisual.html' , title='Data Visualization' , email=resp.json()["email"])
+    return render_template('dataVisual.html' , title='Data Visualization' , email="none", users=users)
     #return resp.text
 
 @app.route('/testing')
