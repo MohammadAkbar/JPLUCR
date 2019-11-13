@@ -221,6 +221,7 @@
             // called when load button is pressed
             $('#useremails').each(function(index) {
                 $(this).on("click", function(){
+                    console.log("click");
                     // For the boolean value
                     var theemail = String($(this).attr('value'));
                     console.log(theemail);
