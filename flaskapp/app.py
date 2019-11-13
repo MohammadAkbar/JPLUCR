@@ -54,7 +54,7 @@ testing = True
 @app.route('/')
 def index():
 	users = User.query.order_by(User.email).all()
-    return render_template('dataVisual.html' , title='Data Visualization' , email="none", users=users)
+	return render_template('dataVisual.html' , title='Data Visualization' , email="none", users=users)
     #return resp.text
 
 @app.route('/testing')
