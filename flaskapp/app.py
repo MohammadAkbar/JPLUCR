@@ -34,6 +34,8 @@ bootstrap = Bootstrap(app)
 nav = Navigation(app)
 nav.Bar('top',[
     nav.Item('Homepage', 'index'),
+    nav.Item('View Data', 'viewData'),
+    nav.Item('Classify Data' , 'classifyData')
 ])
 
 from flask_dance.contrib.google import make_google_blueprint, google
@@ -66,11 +68,11 @@ def testing():
 @app.route('/savedata', methods = ['POST'])
 def get_post_javascript_data():
 	jsdata = str(request.form['javascript_data'])
-
-	u = User.query.filter_by(email='test@test.com').first()
+	email = str(request.form['email'])
+	u = User.query.filter_by(email=email).first()
 	if u is None:
 		# if user does NOT have record , create new record
-		newuser = User(email="test@test.com", data=jsdata)
+		newuser = User(email=email, data=jsdata)
 		db.session.add(newuser)
 		db.session.commit()
 	else:
@@ -81,18 +83,22 @@ def get_post_javascript_data():
 
 @app.route('/loaddata' , methods = ['POST'])
 def load_map_data_string():
-	jsdata = str(request.form['javascript_data'])
-	u = User.query.filter_by(email=jsdata).first()
+	email = str(request.form['email'])
+	u = User.query.filter_by(email=email).first()
 	print('user '+u.data, file=sys.stderr)
 	return u.data
-#def get_post_javascript_data():
-#jsdata = str(request.form['javascript_data'])
-#u = User(email="example@test.com", data="test")
 
-#db.session.add(u)
-#db.session.commit()
-#print('postdata '+jsdata + ' \n stringtest: '+str(stringtest), file=sys.stderr)
-#return "sucess"
+@app.route('/viewData')
+def viewData():
+	return render_template('dataVisual.html' , title='Data Visualization' , email="none")
+
+@app.route('/classifyData')
+def classifyData():
+	if not google.authorized:
+		return redirect(url_for("google.login"))
+	resp = google.get("/oauth2/v2/userinfo")
+	assert resp.ok, resp.text
+	return render_template('dataClassify.html' , title='Data Classsification' , email=resp.json()["email"])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8000,threaded=True,debug=True, ssl_context='adhoc')

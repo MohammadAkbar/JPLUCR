@@ -1,9 +1,322 @@
 {% extends 'base.html' %}
 
-{% block title %}JPL UCR Project - Classify Data{% endblock %}
+{% block title %}JPL UCR Project - Visualize Data{% endblock %}
 
 {% block content %}
     <div>
-        <h1>Classify Data</h1>
+        <h1 style="text-align: center">{{title}}</h1>
     </div>
+    <div>
+        <p>username:{{email}}</p>
+    </div>
+    <!--
+    <a href="#" id="export" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" style="margin-top: 20px;margin-bottom: 20px;">Download</a>
+    -->
+    <div class="form-inline">
+        <div class="form-inline" id="button-addon4">
+            <a id="load" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
+                Load
+            </a>
+            <a id="save" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
+                Save
+            </a>
+            <a id="download" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
+                Download Data
+            </a>
+        </div>
+    </div>
+	<div id="mapid" style="width:100%;height:400px;margin-bottom:40px;"></div>
+	<script>
+        // create a satellite layer
+        var gmaps = L.tileLayer(
+            'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFrYmEwMDIiLCJhIjoiY2syOW40b3NqMHdhazNsbXNybHA2dnAzdSJ9.ihFn0ArkcGyiig4pK58uOQ', 
+            {
+        	   attribution:'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        	   id: 'mapbox.satellite',
+        	   maxZoom:20,
+               useCache: true,
+            }
+        );
+
+
+        // Create Map data with open street view data
+        var map = L.map('mapid', {
+            center: [29.4835527,-90.9283845],
+            zoom: 12,
+            minZoom: 1,
+            maxZoom: 20,
+            layers: [gmaps],
+            fullscreenControl: true,
+            doubleClickZoom: false
+        });
+
+        // setup draw layer
+        var drawnItems = L.featureGroup().addTo(map);
+        var classificationPicked = false;
+        var last_layer;
+        var classifications = [
+            {id_list:1, name:'Flooded',token:'flooded',color:'#003f5c'},
+            {id_list:2, name:'Arid',token:'arid',color:'#444e86'},
+            {id_list:3, name:'Urban',token:'urban',color:'#955196'},
+            {id_list:4, name:'Open Water',token:'openwater',color:'#dd5182'},
+            {id_list:5, name:'Forest',token:'forest',color:'#ff6e54'},
+            {id_list:6, name:'Farmland',token:'farmland',color:'#ffa600'},
+        ];
+
+        var groupedOverlays = {
+            "OpenStreet": {
+                "satellite view":gmaps
+            },
+            "UAVSAR": {
+            },
+            "drawlayer": {
+                "polygons":drawnItems
+            }
+        };
+        for( i=0 ; i<alltiles.length; i++){
+            var uavsar_i = L.TileLayer.boundaryCanvas('/static/alltiles/'+alltiles[i].fullname+'/{z}/{x}/{-y}.png',{
+                bounds: L.latLngBounds(alltiles[i].southwest,alltiles[i].northeast),
+                opacity: 1.0,
+                attribution: "",
+                minNativeZoom: 0,
+                maxNativeZoom: 16,
+                minZoom: 0,
+                maxZoom: 20,
+                boundary: alltiles[i].geom
+            });
+            var m = L.marker(alltiles[i].center,{title:alltiles[i].name});
+            m.addTo(map);
+            groupedOverlays.UAVSAR[alltiles[i].name]=uavsar_i;
+        }
+
+        var options = {
+          // Make the "Landmarks" group exclusive (use radio inputs)
+          exclusiveGroups: ["OpenStreet","drawlayer"],
+          // Show a checkbox next to non-exclusive group labels for toggling all
+          groupCheckboxes: true,
+          defaultChecked: true,
+          collapsed: true
+        };
+
+        var shapes = [];
+        // Add base layers
+        L.control.groupedLayers(null, groupedOverlays, options).addTo(map);
+        map.addControl(new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems,
+                poly: {
+                    allowIntersection: false
+                },
+                remove: true,
+                delete: true
+            },
+            draw: {
+                polygon: {
+                    allowIntersection: false,
+                    shapeOptions: {
+                        stroke: true,
+                        color: '#ffffff',
+                        fillColor: '#ffffff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.5
+                    }
+                },
+                polyline: false,
+                circle: false,
+                circlemarker: false,
+                rectangle: false,
+                marker:false
+            }
+        }));
+        map.on('draw:drawvertex',
+        function (e) {
+            $(".leaflet-marker-icon.leaflet-div-icon.leaflet-editing-icon.leaflet-touch-icon.leaflet-zoom-animated.leaflet-interactive:first").css({ 'background-color': 'red' });
+        });
+        map.on(L.Draw.Event.CREATED, function (event) {
+            var layer = event.layer;
+            last_layer = layer;
+
+            drawnItems.addLayer(event.layer);
+
+
+            var options = classifications.map(x=>x.token);
+            var coordinates = layer.getLatLngs()[0];
+            var last = coordinates[0];
+
+            promptClassify( layer , options , last );
+
+            
+        });
+        
+        function promptClassify( layer , options , latlng ){
+            classificationPicked=false;
+            var content = document.createElement("div");
+            for( i=0 ; i<options.length; i++){
+                content.innerHTML+="<button id=\"prompt_"+options[i]+"\" type=\"button\" class=\"btn btn-success\" value=\""+options[i]+"\">"+options[i]+"</button>";
+            }
+
+            var popup = L.popup({closeButton:false})
+                .setLatLng(latlng)
+                .setContent(content)
+                .openOn(map);
+
+
+            for(i=0 ; i<options.length; i++){
+                $("#prompt_"+options[i]).click(
+                    function(event) {
+                        var shape = layer.toGeoJSON();
+                        shape.properties.label=$(this).prop('value');
+                        layer.label=$(this).prop('value');
+                        //layer.feature.properties.label=$(this).prop('value');
+                        saveShape(shape);
+                    }               
+                );
+            }
+            
+        }
+
+        function saveShape(shape){
+            shapes.push(shape);
+            classificationPicked=true;
+            var i = classifications.map(e => e.token).indexOf(String(shape.properties.label));
+            last_layer.setStyle({
+                color: classifications[i].color,
+                fillColor: classifications[i].color
+            });
+            map.closePopup();
+        }
+        map.on('popupclose', function(e) {
+            if(classificationPicked==false){
+                drawnItems.removeLayer(last_layer);
+                shapes.pop();
+            } else{
+                //drawnItems.removeLayer(last_layer);
+                //last_layer.setStyle({color:'red'});
+            }
+        });
+        $(document).ready(function() {
+            // called when load button is pressed
+            $("#load").click(function(){
+
+                function polystyle(feature) {
+                    var i = classifications.map(x=>x.token).indexOf(String(feature.properties.label));
+                    console.log(String(classifications[i].color));
+                    return {
+                        stroke: true,
+                        color: classifications[i].color,
+                        fillColor: classifications[i].color,
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.5
+                    };
+                }
+
+                var posting = $.post( "/loaddata", {
+                    email: "{{email}}" 
+                });
+                posting.done(function( data ) {
+                    for(var i in drawnItems._layers){
+                        drawnItems.removeLayer(drawnItems._layers[i]);
+                    }
+                    var jsondata = JSON.parse(data);
+                    
+                    L.geoJson(jsondata, {
+                          onEachFeature: onEachFeature
+                    ,style: polystyle});
+                    function onEachFeature(feature, layer) {
+                        drawnItems.addLayer(layer);
+                        layer.label=String(feature.properties.label);
+                    }
+                    
+                });
+            });
+
+            // called when save button is pressed
+            function genJSONString(){
+                var saveData ="";
+                saveData += "{ \n \"type\": \"FeatureCollection\", \n ";
+                saveData += "\"features\": \n[ \n";
+                shapes = drawnItems.toGeoJSON().features;
+                labels = []
+                drawnItems.eachLayer(function (layer) {
+                    //console.log(layer.label);
+                    labels.push(layer.label);
+                });
+                for( var s in shapes){
+                    saveData += "{ \n";
+
+                        saveData += "\"type\": \"Feature\", \n";
+                        saveData += "\"geometry\": { \n";
+                            saveData += "\"type\": \"Polygon\", \n";
+                            saveData += "\"coordinates\": [[\n";
+                            for ( var c in shapes[s].geometry.coordinates[0]){
+                                saveData += "[";
+                                saveData += shapes[s].geometry.coordinates[0][c][0];
+                                saveData += ","
+                                saveData += shapes[s].geometry.coordinates[0][c][1];
+                                saveData += "]";
+                                if( c < shapes[s].geometry.coordinates[0].length - 1 ){
+                                    saveData += ",";
+                                }
+                            }
+                            saveData += "]]\n";
+                        saveData += "}, \n";
+                        saveData += "\"properties\": { \n";
+                            saveData += "\"label\":\"" + labels[s] + "\" \n";
+                        saveData += "} \n";
+
+                    saveData += "} \n";
+                    if( s < shapes.length - 1 ){
+                        saveData += ",";
+                    }
+                }
+                saveData += "] \n";
+                saveData += "}";
+                return saveData;
+            }
+
+            $("#save").click(function(){
+                var saveData = genJSONString();
+                var posting = $.post( "/savedata", {
+                    javascript_data: saveData,
+                    email: "{{email}}"
+                });
+                posting.done(function( data ) {
+                    //console.log(data);
+                });
+            });
+
+            function download(filename, text) {
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+            }
+
+            // Start file download.
+            $("#download").click(function(){
+                var saveData = genJSONString();
+                download("data.geojson",saveData);
+            });
+            // Disable dragging when user's cursor enters the element
+            $(".leaflet-control-container").mouseover( function () {
+                map.dragging.disable();
+                map.scrollWheelZoom.disable();
+            });
+
+            // Re-enable dragging when user's cursor leaves the element
+            $(".leaflet-control-container").mouseout( function () {
+                map.dragging.enable();
+                map.scrollWheelZoom.enable();
+            });
+        });
+	</script>
+
 {% endblock %}

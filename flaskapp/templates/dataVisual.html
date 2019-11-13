@@ -20,7 +20,7 @@
             <a id="save" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
                 Save
             </a>
-            <a id="export" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
+            <a id="download" class="btn btn-primary" href="#" role="button" style="margin-top: 20px;margin-bottom: 20px;">
                 Download Data
             </a>
         </div>
@@ -34,6 +34,7 @@
         	   attribution:'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         	   id: 'mapbox.satellite',
         	   maxZoom:20,
+               useCache: true,
             }
         );
 
@@ -54,9 +55,12 @@
         var classificationPicked = false;
         var last_layer;
         var classifications = [
-            {id_list:1, name:'Flooded',token:'flooded',color:'#afdeed'},
-            {id_list:2, name:'Arid',token:'arid',color:'#e5ebb2'},
-            {id_list:2, name:'Urban',token:'urban',color:'#79ed98'}
+            {id_list:1, name:'Flooded',token:'flooded',color:'#003f5c'},
+            {id_list:2, name:'Arid',token:'arid',color:'#444e86'},
+            {id_list:3, name:'Urban',token:'urban',color:'#955196'},
+            {id_list:4, name:'Open Water',token:'openwater',color:'#dd5182'},
+            {id_list:5, name:'Forest',token:'forest',color:'#ff6e54'},
+            {id_list:6, name:'Farmland',token:'farmland',color:'#ffa600'},
         ];
 
         var groupedOverlays = {
@@ -75,7 +79,7 @@
                 opacity: 1.0,
                 attribution: "",
                 minNativeZoom: 0,
-                maxNativeZoom: 10,
+                maxNativeZoom: 16,
                 minZoom: 0,
                 maxZoom: 20,
                 boundary: alltiles[i].geom
@@ -113,9 +117,9 @@
                         stroke: true,
                         color: '#ffffff',
                         fillColor: '#ffffff',
-                        weight: 1,
+                        weight: 2,
                         opacity: 1,
-                        fillOpacity: 0.4
+                        fillOpacity: 0.5
                     }
                 },
                 polyline: false,
@@ -202,14 +206,14 @@
                         stroke: true,
                         color: classifications[i].color,
                         fillColor: classifications[i].color,
-                        weight: 1,
+                        weight: 2,
                         opacity: 1,
-                        fillOpacity: 0.4
+                        fillOpacity: 0.5
                     };
                 }
 
                 var posting = $.post( "/loaddata", {
-                    javascript_data: "{{email}}" 
+                    email: "{{email}}" 
                 });
                 posting.done(function( data ) {
                     for(var i in drawnItems._layers){
@@ -227,9 +231,9 @@
                     
                 });
             });
+
             // called when save button is pressed
-            $("#save").click(function(){
-                console.log("save");
+            function genJSONString(){
                 var saveData ="";
                 saveData += "{ \n \"type\": \"FeatureCollection\", \n ";
                 saveData += "\"features\": \n[ \n";
@@ -269,15 +273,38 @@
                 }
                 saveData += "] \n";
                 saveData += "}";
-                console.log(saveData);
+                return saveData;
+            }
+
+            $("#save").click(function(){
+                var saveData = genJSONString();
                 var posting = $.post( "/savedata", {
-                    javascript_data: saveData
+                    javascript_data: saveData,
+                    email: "{{email}}"
                 });
                 posting.done(function( data ) {
-                    console.log(data);
+                    //console.log(data);
                 });
             });
 
+            function download(filename, text) {
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+            }
+
+            // Start file download.
+            $("#download").click(function(){
+                var saveData = genJSONString();
+                download("data.geojson",saveData);
+            });
             // Disable dragging when user's cursor enters the element
             $(".leaflet-control-container").mouseover( function () {
                 map.dragging.disable();
