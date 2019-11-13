@@ -42,7 +42,7 @@
         // Create Map data with open street view data
         var map = L.map('mapid', {
             center: [29.4835527,-90.9283845],
-            zoom: 12,
+            zoom: 6,
             minZoom: 1,
             maxZoom: 20,
             layers: [gmaps],
@@ -201,7 +201,6 @@
 
                 function polystyle(feature) {
                     var i = classifications.map(x=>x.token).indexOf(String(feature.properties.label));
-                    console.log(String(classifications[i].color));
                     return {
                         stroke: true,
                         color: classifications[i].color,

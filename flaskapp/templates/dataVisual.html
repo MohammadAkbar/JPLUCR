@@ -64,7 +64,7 @@
         // Create Map data with open street view data
         var map = L.map('mapid', {
             center: [29.4835527,-90.9283845],
-            zoom: 12,
+            zoom: 6,
             minZoom: 1,
             maxZoom: 20,
             layers: [gmaps],
@@ -244,7 +244,12 @@
                             drawnItems.removeLayer(drawnItems._layers[i]);
                         }
                         var jsondata = JSON.parse(data);
-                        
+
+                        var flipped = turf.flip(jsondata);
+                        var bbox = turf.bbox(flipped);
+                        var bboxPolygon = turf.bboxPolygon(bbox);
+                        map.flyToBounds(turf.getCoords(bboxPolygon));
+
                         L.geoJson(jsondata, {
                               onEachFeature: onEachFeature
                         ,style: polystyle});
