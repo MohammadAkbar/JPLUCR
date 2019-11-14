@@ -45,6 +45,7 @@ blueprint = make_google_blueprint(
     client_id="1045884176358-7ujjr3afn72o8fpatg58gvtkbf48s9o7.apps.googleusercontent.com",
     client_secret="wxpbWHrKpva3SsPbeobgzLZK",
     scope=['email'],
+    reprompt_consent=True,
     offline=True
 )
 app.register_blueprint(blueprint, url_prefix="/login")
