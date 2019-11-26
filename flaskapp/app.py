@@ -50,8 +50,6 @@ blueprint = make_google_blueprint(
 )
 app.register_blueprint(blueprint, url_prefix="/login")
 
-testing = True
-
 @app.route('/')
 def index():
 	users = User.query.order_by(User.email).all()
@@ -98,6 +96,8 @@ def classifyData():
 	assert resp.ok, resp.text
 	return render_template('dataClassify.html' , title='Data Classsification' , email=resp.json()["email"])
 
+testmode = True
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=8000,threaded=True,debug=True, ssl_context='adhoc')
+    app.run(host='0.0.0.0',port=8000,threaded=True,debug=testmode, ssl_context='adhoc')
     #app.run()
