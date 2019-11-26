@@ -62,7 +62,7 @@
     <script src="{{ url_for( 'static' , filename='tiledata.js' ) }} "></script>
     <script src="https://unpkg.com/pouchdb@^5.2.0/dist/pouchdb.js"></script>
     <script src="{{ url_for( 'static' , filename='leaflet/src/L.TileLayer.PouchDBCached.js' ) }} "></script>
-    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src="{{ url_for( 'static' , filename='leaflet/src/turf.min.js' ) }} "></script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA9BpkqJIG8MIoM86F4-Jr9_r6RGF8mp9I" async defer></script>
     <script src='https://unpkg.com/leaflet.gridlayer.googlemutant@latest/Leaflet.GoogleMutant.js'></script>
