@@ -50,11 +50,6 @@
             doubleClickZoom: false
         });
 
-		var water = L.gridLayer.googleMutant({
-            type: 'roadmap',
-            styles: waterstyle,
-            useCache: true,
-        }).addTo(map);
         // setup draw layer
         var drawnItems = L.featureGroup().addTo(map);
         var classificationPicked = false;
@@ -72,9 +67,6 @@
                 "satellite view":gmaps
             },
             "UAVSAR": {
-            },
-            "Google Earth": {
-                " - Bodies of Water": water
             },
             "drawlayer": {
                 "polygons":drawnItems

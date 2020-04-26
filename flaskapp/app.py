@@ -34,7 +34,6 @@ bootstrap = Bootstrap(app)
 nav = Navigation(app)
 nav.Bar('top',[
     nav.Item('Homepage', 'index'),
-    nav.Item('View Data', 'viewData'),
     nav.Item('Classify Data' , 'classifyData')
 ])
 
