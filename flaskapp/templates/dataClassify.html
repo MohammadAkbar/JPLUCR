@@ -150,7 +150,7 @@
         });
         
         function promptClassify( layer , options , latlng ){
-            classificationPicked=false;
+            classificationPicked=true;
             var content = document.createElement("div");
             for( i=0 ; i<options.length; i++){
                 content.innerHTML+="<button id=\"prompt_"+options[i]+"\" type=\"button\" class=\"btn btn-success\" value=\""+options[i]+"\">"+options[i]+"</button>";
