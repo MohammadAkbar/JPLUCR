@@ -88,7 +88,7 @@
             m.addTo(map);
             groupedOverlays.UAVSAR[alltiles[i].name]=uavsar_i;
         }
-
+        L.mapbox.tileLayer('landplanner.map-sa4pz9ny').addTo(map);
         var options = {
           // Make the "Landmarks" group exclusive (use radio inputs)
           exclusiveGroups: ["OpenStreet"],
@@ -150,7 +150,7 @@
         });
         
         function promptClassify( layer , options , latlng ){
-            classificationPicked=true;
+            classificationPicked=false;
             var content = document.createElement("div");
             for( i=0 ; i<options.length; i++){
                 content.innerHTML+="<button id=\"prompt_"+options[i]+"\" type=\"button\" class=\"btn btn-success\" value=\""+options[i]+"\">"+options[i]+"</button>";
