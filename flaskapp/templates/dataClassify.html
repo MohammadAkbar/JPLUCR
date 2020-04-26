@@ -88,7 +88,15 @@
             m.addTo(map);
             groupedOverlays.UAVSAR[alltiles[i].name]=uavsar_i;
         }
-        L.mapbox.tileLayer('landplanner.map-sa4pz9ny').addTo(map);
+
+        L.tileLayer.wms("https://mapsengine.google.com/15658084116283052074-10602818151822182906-4/wms/", {
+        layers: '15658084116283052074-00933023778830223306-4,15658084116283052074-00933023778830223306-4',
+      format: 'image/png',
+      version: '1.3.0',
+      transparent: true,
+      attribution: "",
+    }).addTo(map);
+
         var options = {
           // Make the "Landmarks" group exclusive (use radio inputs)
           exclusiveGroups: ["OpenStreet"],
