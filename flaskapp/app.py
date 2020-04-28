@@ -73,7 +73,7 @@ def get_post_javascript_data():
 	else:
 		# if user does have record , update record data
 		u.data=jsdata
-		db.session.commit()	
+		db.session.commit()
 	return "sucess"
 
 @app.route('/loaddata' , methods = ['POST'])
@@ -87,8 +87,12 @@ def viewData():
 	users = User.query.order_by(User.email).all()
 	return render_template('dataVisual.html' , title='Data Visualization' , email="none", users=users)
 
+testmode = True
+
 @app.route('/classifyData')
 def classifyData():
+	if testmode:
+		return render_template('dataClassify.html' , title='Data Classsification' , email='testing@devmode')
 	if not google.authorized:
 		return redirect(url_for("google.login"))
 	resp = google.get("/oauth2/v2/userinfo")
